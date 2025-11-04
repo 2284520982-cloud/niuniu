@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>测试页面</title>
+</head>
+<body>
+  <h1>测试页面</h1>
+  <button id="testBtn">测试按钮</button>
+  <div id="result"></div>
+  
+  <script>
+    console.log('Test script loaded');
+    document.getElementById('testBtn').addEventListener('click', () => {
+      console.log('Test button clicked!');
+      document.getElementById('result').textContent = '按钮工作正常！';
+    });
+    console.log('Event listener attached');
+  </script>
+</body>
+</html>
+

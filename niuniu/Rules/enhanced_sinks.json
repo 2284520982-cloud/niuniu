@@ -1,0 +1,388 @@
+{
+  "enhanced_sink_rules": [
+    {
+      "sink_name": "RCE_ADVANCED",
+      "sink_desc": "高级代码执行（动态编译/加载）",
+      "severity_level": "Critical",
+      "cwe": "CWE-94",
+      "sinks": [
+        "javax.tools.JavaCompiler:getTask|run",
+        "javax.tools.ToolProvider:getSystemJavaCompiler",
+        "org.apache.commons.jexl3.JexlEngine:createScript|createExpression",
+        "org.apache.commons.jexl2.JexlEngine:createScript|createExpression",
+        "org.codehaus.groovy.runtime.InvokerHelper:invokeMethod|invokeStaticMethod",
+        "org.mozilla.javascript.NativeFunction:call|construct",
+        "org.mozilla.javascript.ContextFactory:call|enterContext",
+        "org.python.core.PyCode:exec|eval",
+        "org.springframework.expression.spel.standard.SpelExpressionParser:parseRaw",
+        "com.github.vlsi.antlr4.MultiMap:get",
+        "net.sf.saxon.s9api.XsltCompiler:compile|compilePackage"
+      ]
+    },
+    {
+      "sink_name": "DESERIALIZATION_RCE",
+      "sink_desc": "反序列化RCE（fastjson/jackson/yaml/xstream）",
+      "severity_level": "Critical",
+      "cwe": "CWE-502",
+      "sinks": [
+        "com.alibaba.fastjson.JSON:parseObject|parseArray|parse",
+        "com.alibaba.fastjson2.JSON:parseObject|parseArray|parse",
+        "com.alibaba.fastjson.parser.ParserConfig:setAutoTypeSupport|addAccept",
+        "com.fasterxml.jackson.databind.ObjectMapper:readValue|readTree|readValues|enableDefaultTyping",
+        "com.fasterxml.jackson.databind.ObjectMapper:setDefaultTyping",
+        "org.yaml.snakeyaml.Yaml:load|loadAs|loadAll|loadAllFromReader",
+        "com.thoughtworks.xstream.XStream:fromXML|fromXMLInputStream|unmarshal",
+        "com.thoughtworks.xstream.XStream:allowTypes|denyTypes|allowTypeHierarchy",
+        "org.codehaus.jackson.map.ObjectMapper:readValue|readTree",
+        "com.google.gson.Gson:fromJson",
+        "net.sf.json.JSONObject:toBean|fromObject",
+        "com.caucho.hessian.io.HessianInput:readObject|readRemote",
+        "com.caucho.burlap.io.BurlapInput:readObject",
+        "java.beans.XMLDecoder:readObject|setExceptionListener"
+      ]
+    },
+    {
+      "sink_name": "XXE_ADVANCED",
+      "sink_desc": "XXE外部实体注入（DOM/SAX/StAX/XSLT）",
+      "severity_level": "High",
+      "cwe": "CWE-611",
+      "sinks": [
+        "javax.xml.parsers.DocumentBuilder:parse|parseEntityReference",
+        "javax.xml.parsers.SAXParser:parse|parseEntity",
+        "javax.xml.parsers.DocumentBuilderFactory:newDocumentBuilder|setExpandEntityReferences",
+        "javax.xml.parsers.SAXParserFactory:newSAXParser|setNamespaceAware",
+        "javax.xml.stream.XMLInputFactory:createXMLStreamReader|createXMLEventReader",
+        "javax.xml.transform.Transformer:transform|setParameter",
+        "javax.xml.transform.TransformerFactory:newTransformer|newTransformerHandler",
+        "javax.xml.transform.sax.SAXTransformerFactory:newTransformerHandler|newTemplatesHandler",
+        "org.dom4j.io.SAXReader:read|parse",
+        "org.dom4j.io.DOMReader:read",
+        "org.jdom2.input.SAXBuilder:build|buildFromInputStream",
+        "org.jdom2.input.StAXBuilder:build",
+        "org.xml.sax.XMLReader:parse|parseEntity",
+        "org.apache.commons.digester3.Digester:parse|parseEntity",
+        "javax.xml.validation.Schema:newValidator|newValidatorHandler",
+        "javax.xml.validation.Validator:validate|validateEntity"
+      ]
+    },
+    {
+      "sink_name": "SQLI_ADVANCED",
+      "sink_desc": "SQL注入（动态SQL/拼接/MyBatis/JPA）",
+      "severity_level": "High",
+      "cwe": "CWE-89",
+      "sinks": [
+        "java.sql.Statement:execute|executeQuery|executeUpdate|executeBatch|executeLargeUpdate|executeLargeBatch",
+        "java.sql.Connection:prepareStatement|prepareCall|nativeSQL|createStatement",
+        "java.sql.CallableStatement:execute|executeQuery|executeUpdate",
+        "org.hibernate.Session:createQuery|createSQLQuery|createNamedQuery|createNativeQuery",
+        "org.hibernate.query.Query:setParameter|list|uniqueResult|executeUpdate",
+        "org.hibernate.query.NativeQuery:addQueryHint|setParameter",
+        "org.mybatis.spring.SqlSessionTemplate:selectOne|selectList|selectMap|select|insert|update|delete",
+        "org.apache.ibatis.session.SqlSession:selectOne|selectList|selectMap|select|insert|update|delete",
+        "org.apache.ibatis.jdbc.SQL:SELECT|INSERT|UPDATE|DELETE|toString",
+        "javax.persistence.EntityManager:createQuery|createNamedQuery|createNativeQuery",
+        "javax.persistence.Query:setParameter|setParameterList|getResultList|getSingleResult|executeUpdate",
+        "org.springframework.jdbc.core.JdbcTemplate:query|queryForObject|queryForList|queryForMap|update|execute|batchUpdate",
+        "org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate:query|queryForObject|queryForList|update|batchUpdate",
+        "org.jooq.DSLContext:query|execute|insert|update|delete|select",
+        "com.querydsl.jpa.impl.JPAQuery:from|where|select|fetch|fetchOne",
+        "com.querydsl.sql.SQLQuery:from|where|select",
+        "org.apache.ignite.IgniteCache:query|querySqlFields"
+      ]
+    },
+    {
+      "sink_name": "SSRF_ADVANCED",
+      "sink_desc": "SSRF服务端请求伪造（多协议/文件读取）",
+      "severity_level": "High",
+      "cwe": "CWE-918",
+      "sinks": [
+        "java.net.URL:openConnection|openStream|<init>|getContent",
+        "java.net.URLConnection:connect|getInputStream|getOutputStream|getContent",
+        "java.net.HttpURLConnection:connect|getResponseCode|getInputStream",
+        "java.net.Socket:<init>|connect",
+        "java.net.ServerSocket:<init>|accept",
+        "org.apache.http.client.HttpClient:execute|executeHttp",
+        "org.apache.http.impl.client.CloseableHttpClient:execute|executeHttp",
+        "org.apache.http.client.methods.HttpGet:<init>|execute",
+        "org.apache.http.client.methods.HttpPost:<init>|execute",
+        "org.apache.http.client.methods.HttpRequestBase:execute",
+        "okhttp3.OkHttpClient:newCall|execute",
+        "okhttp3.Request:newBuilder|url",
+        "okhttp3.Call:execute|enqueue",
+        "org.springframework.web.client.RestTemplate:exchange|getForObject|getForEntity|postForObject|postForEntity|put|delete|patch",
+        "org.springframework.web.reactive.function.client.WebClient:get|post|put|delete|patch|method",
+        "retrofit2.Retrofit:create",
+        "retrofit2.Call:execute|enqueue",
+        "org.apache.commons.httpclient.HttpClient:executeMethod|executePostMethod|executeGetMethod",
+        "org.jsoup.Jsoup:connect|parse",
+        "java.net.URI:<init>|resolve|toURL",
+        "javax.imageio.ImageIO:read|readRaster|readTile",
+        "java.net.InetAddress:getByName|getByAddress|getAllByName",
+        "com.google.common.net.InternetDomainName:from|publicSuffix",
+        "io.vertx.core.http.HttpClient:get|post|put|delete|request|requestAbs"
+      ]
+    },
+    {
+      "sink_name": "COMMAND_INJECTION",
+      "sink_desc": "命令注入（Runtime/ProcessBuilder/Shell）",
+      "severity_level": "Critical",
+      "cwe": "CWE-78",
+      "sinks": [
+        "java.lang.Runtime:exec|getRuntime",
+        "java.lang.ProcessBuilder:start|command|<init>",
+        "java.lang.Process:getInputStream|getOutputStream|getErrorStream",
+        "java.lang.ProcessBuilder.Redirect:appendTo|to",
+        "org.apache.commons.exec.DefaultExecutor:execute|executeNoTimeout",
+        "org.apache.commons.exec.CommandLine:createArgument|addArgument",
+        "org.springframework.util.ShellUtils:shellQuote",
+        "com.google.common.base.Shell:runShellCommand|runCommand",
+        "org.apache.commons.lang3.SystemUtils:IS_OS_WINDOWS|IS_OS_UNIX"
+      ]
+    },
+    {
+      "sink_name": "PATH_TRAVERSAL_ADVANCED",
+      "sink_desc": "路径遍历（文件操作/解压/ZipSlip）",
+      "severity_level": "High",
+      "cwe": "CWE-22",
+      "sinks": [
+        "java.io.File:<init>|delete|deleteOnExit|createNewFile|mkdir|mkdirs|renameTo",
+        "java.io.FileInputStream:<init>|read|readAllBytes",
+        "java.io.FileOutputStream:<init>|write|flush",
+        "java.io.FileReader:<init>|read",
+        "java.io.FileWriter:<init>|write|flush",
+        "java.io.RandomAccessFile:<init>|read|write|seek",
+        "java.nio.file.Paths:get|getPath",
+        "java.nio.file.Files:newInputStream|newOutputStream|newBufferedReader|newBufferedWriter|write|writeString|readAllBytes|readAllLines|readString|delete|copy|move|createFile|createDirectory|createDirectories|createTempFile|createTempDirectory",
+        "org.apache.commons.io.FileUtils:openInputStream|openOutputStream|readFileToString|writeStringToFile|copyFile|deleteDirectory|forceDelete|cleanDirectory|writeByteArrayToFile|readFileToByteArray",
+        "org.springframework.core.io.FileSystemResource:<init>|getFile|getPath",
+        "org.springframework.web.multipart.MultipartFile:transferTo|getBytes",
+        "java.util.zip.ZipInputStream:getNextEntry|read",
+        "java.util.zip.ZipFile:getInputStream|getEntry|entries",
+        "java.util.zip.ZipEntry:getName|getSize",
+        "org.apache.commons.compress.archivers.zip.ZipArchiveInputStream:getNextZipEntry|getNextEntry",
+        "org.apache.commons.compress.archivers.tar.TarArchiveInputStream:getNextTarEntry|getNextEntry",
+        "org.apache.commons.compress.archivers.sevenz.SevenZFile:getNextEntry|getInputStream"
+      ]
+    },
+    {
+      "sink_name": "TEMPLATE_INJECTION",
+      "sink_desc": "模板注入（FreeMarker/Velocity/Thymeleaf/SpEL）",
+      "severity_level": "High",
+      "cwe": "CWE-94",
+      "sinks": [
+        "freemarker.template.Template:process|getTemplate|render",
+        "org.springframework.web.servlet.view.freemarker.FreeMarkerView:setAttributes|renderMergedTemplateModel",
+        "org.apache.velocity.VelocityEngine:evaluate|getTemplate|mergeTemplate",
+        "org.apache.velocity.app.Velocity:evaluate|getTemplate|mergeTemplate",
+        "org.apache.velocity.runtime.RuntimeInstance:evaluate|getTemplate",
+        "org.thymeleaf.TemplateEngine:process|processTemplate|processStringTemplate",
+        "org.thymeleaf.context.Context:setVariable|setVariables",
+        "org.springframework.expression.spel.standard.SpelExpressionParser:parseExpression|parseRaw",
+        "org.springframework.expression.Expression:getValue|setValue|execute",
+        "org.springframework.ui.Model:addAttribute|addAllAttributes",
+        "org.springframework.ui.ModelMap:addAttribute|addAllAttributes",
+        "com.github.jknack.handlebars.Handlebars:compile|compileInline",
+        "org.apache.velocity.tools.view.servlet.ToolboxManager:getToolbox"
+      ]
+    },
+    {
+      "sink_name": "EL_INJECTION",
+      "sink_desc": "EL表达式注入（JSP EL/SpEL）",
+      "severity_level": "High",
+      "cwe": "CWE-94",
+      "sinks": [
+        "javax.el.ELProcessor:eval|getValue|setValue",
+        "javax.el.ExpressionFactory:createValueExpression|createMethodExpression",
+        "javax.el.ValueExpression:getValue|setValue",
+        "javax.el.MethodExpression:invoke|getMethodInfo",
+        "org.springframework.expression.spel.standard.SpelExpressionParser:parseExpression|parseRaw",
+        "org.springframework.expression.Expression:getValue|setValue|execute",
+        "org.springframework.expression.EvaluationContext:setVariable|setRoot|setPropertyAccessors",
+        "org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter:invokeHandlerMethod"
+      ]
+    },
+    {
+      "sink_name": "REFLECTION_INJECTION",
+      "sink_desc": "反射注入（动态类加载/方法调用）",
+      "severity_level": "High",
+      "cwe": "CWE-470",
+      "sinks": [
+        "java.lang.Class:forName|newInstance|getMethod|getField|getConstructor|getDeclaredMethod|getDeclaredField|getDeclaredConstructor",
+        "java.lang.ClassLoader:loadClass|getResource|getResourceAsStream|findClass|defineClass",
+        "java.lang.reflect.Method:invoke|setAccessible",
+        "java.lang.reflect.Constructor:newInstance|setAccessible",
+        "java.lang.reflect.Field:get|set|setAccessible|getInt|getLong|getDouble|getBoolean",
+        "java.lang.reflect.Proxy:newProxyInstance|getProxyClass",
+        "java.lang.reflect.AccessibleObject:setAccessible",
+        "org.springframework.util.ClassUtils:forName|isPresent|getDefaultClassLoader",
+        "org.springframework.util.ReflectionUtils:findMethod|invokeMethod|setField|getField"
+      ]
+    },
+    {
+      "sink_name": "LDAP_INJECTION",
+      "sink_desc": "LDAP注入（未转义查询）",
+      "severity_level": "High",
+      "cwe": "CWE-90",
+      "sinks": [
+        "javax.naming.directory.DirContext:search|lookup|getAttributes|list|listBindings|modifyAttributes|createSubcontext|destroySubcontext",
+        "javax.naming.directory.InitialDirContext:search|lookup|getAttributes|createSubcontext",
+        "javax.naming.Context:lookup|list|listBindings|createSubcontext|destroySubcontext",
+        "javax.naming.InitialContext:lookup|list|bind|rebind|unbind|createSubcontext",
+        "org.springframework.ldap.core.LdapTemplate:search|find|findOne|list|lookup|authenticate|bind|unbind",
+        "com.unboundid.ldap.sdk.LDAPConnection:search|modify|add|delete|modifyDN",
+        "com.unboundid.ldap.sdk.SearchRequest:withFilter|withBaseDN|withScope"
+      ]
+    },
+    {
+      "sink_name": "XSS_ADVANCED",
+      "sink_desc": "XSS跨站脚本（多场景输出）",
+      "severity_level": "Medium",
+      "cwe": "CWE-79",
+      "sinks": [
+        "javax.servlet.http.HttpServletResponse:getWriter|getOutputStream|setHeader|addHeader|sendRedirect",
+        "javax.servlet.ServletResponse:getWriter|getOutputStream",
+        "javax.servlet.jsp.JspWriter:print|println|write|flush",
+        "org.springframework.web.servlet.ModelAndView:addObject|addAllObjects|setViewName",
+        "org.springframework.ui.Model:addAttribute|addAllAttributes|mergeAttributes",
+        "org.springframework.ui.ModelMap:addAttribute|addAllAttributes|mergeAttributes",
+        "org.thymeleaf.context.Context:setVariable|setVariables",
+        "freemarker.template.Template:process|render",
+        "org.springframework.web.servlet.view.freemarker.FreeMarkerView:setAttributes|renderMergedTemplateModel",
+        "jakarta.servlet.http.HttpServletResponse:getWriter|getOutputStream|setHeader|addHeader",
+        "jakarta.servlet.jsp.JspWriter:print|println|write"
+      ]
+    },
+    {
+      "sink_name": "JWT_WEAK",
+      "sink_desc": "JWT弱密钥/未验证签名",
+      "severity_level": "High",
+      "cwe": "CWE-326",
+      "sinks": [
+        "io.jsonwebtoken.Jwts:parser|builder|setSigningKey|setSigningKeyResolver|setAllowedClockSkewSeconds",
+        "io.jsonwebtoken.SignatureAlgorithm:HS256|HS384|HS512|RS256|RS384|RS512|ES256|ES384|ES512",
+        "io.jsonwebtoken.impl.DefaultJwtBuilder:signWith|compact",
+        "io.jsonwebtoken.impl.DefaultJwtParser:parse|parseClaimsJws|parseClaimsJwt|setSigningKey",
+        "com.auth0.jwt.JWT:require|decode|verify|create",
+        "com.auth0.jwt.algorithms.Algorithm:HMAC256|HMAC384|HMAC512|RSA256|RSA384|RSA512",
+        "org.springframework.security.oauth2.jwt.JwtDecoder:decode|withJwkSetUri",
+        "org.springframework.security.oauth2.jwt.NimbusJwtDecoder:withJwkSetUri|withSecretKey|withPublicKey"
+      ]
+    },
+    {
+      "sink_name": "CRYPTO_WEAK",
+      "sink_desc": "弱加密算法（MD5/SHA1/DES/弱随机数）",
+      "severity_level": "High",
+      "cwe": "CWE-327",
+      "sinks": [
+        "javax.crypto.Cipher:getInstance",
+        "java.security.MessageDigest:getInstance",
+        "java.security.SecureRandom:<init>|getInstance|setSeed",
+        "java.security.KeyPairGenerator:getInstance|initialize",
+        "javax.crypto.KeyGenerator:getInstance|init",
+        "javax.crypto.spec.SecretKeySpec:<init>",
+        "java.security.KeyFactory:generatePrivate|generatePublic",
+        "org.bouncycastle.crypto.CipherParameters",
+        "org.bouncycastle.crypto.engines.DESEngine:<init>",
+        "org.bouncycastle.crypto.engines.DESedeEngine:<init>"
+      ]
+    },
+    {
+      "sink_name": "OAUTH2_VULNERABLE",
+      "sink_desc": "OAuth2漏洞（重定向URI未校验/状态缺失）",
+      "severity_level": "High",
+      "cwe": "CWE-601",
+      "sinks": [
+        "org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest:getAuthorizationRequest",
+        "org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest:getRedirectUri|getState|getAuthorizationRequestUri",
+        "org.springframework.security.oauth2.client.registration.ClientRegistration:getRedirectUri|getClientId|getClientSecret",
+        "org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter:attemptAuthentication",
+        "org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository:saveAuthorizedClient|loadAuthorizedClient",
+        "com.github.scribejava.core.oauth.OAuth20Service:getAuthorizationUrl|getAccessToken"
+      ]
+    },
+    {
+      "sink_name": "REDIRECT_UNVALIDATED",
+      "sink_desc": "未验证的重定向",
+      "severity_level": "Medium",
+      "cwe": "CWE-601",
+      "sinks": [
+        "javax.servlet.http.HttpServletResponse:sendRedirect|setHeader|addHeader",
+        "org.springframework.web.servlet.view.RedirectView:<init>|setUrl|setExposeModelAttributes",
+        "org.springframework.web.servlet.mvc.support.RedirectAttributes:addAttribute|addFlashAttribute",
+        "org.springframework.web.util.UriComponentsBuilder:fromUriString|fromPath|fromHttpUrl",
+        "org.springframework.http.HttpHeaders:setLocation|add",
+        "org.springframework.http.ResponseEntity:ok|created|found|movedPermanently"
+      ]
+    },
+    {
+      "sink_name": "REDIS_COMMAND_INJECTION",
+      "sink_desc": "Redis命令注入",
+      "severity_level": "High",
+      "cwe": "CWE-943",
+      "sinks": [
+        "redis.clients.jedis.Jedis:eval|evalSha|scriptLoad|evalInPipeline",
+        "redis.clients.jedis.JedisCommands:eval|evalSha",
+        "org.springframework.data.redis.core.RedisTemplate:execute|executePipelined|opsForValue|opsForHash|opsForList|opsForSet|opsForZSet",
+        "org.springframework.data.redis.core.StringRedisTemplate:execute|executePipelined|opsForValue",
+        "org.springframework.data.redis.core.script.DefaultRedisScript:execute|executePipelined",
+        "io.lettuce.core.api.sync.RedisCommands:eval|evalSha|script|execute",
+        "io.lettuce.core.api.async.RedisAsyncCommands:eval|evalSha|script"
+      ]
+    },
+    {
+      "sink_name": "NOSQL_INJECTION",
+      "sink_desc": "NoSQL注入（MongoDB/Elasticsearch）",
+      "severity_level": "High",
+      "cwe": "CWE-943",
+      "sinks": [
+        "com.mongodb.client.MongoCollection:find|findOne|insertOne|insertMany|updateOne|updateMany|deleteOne|deleteMany|aggregate",
+        "com.mongodb.DBCollection:find|findOne|insert|update|remove|distinct|count|aggregate",
+        "org.mongodb.morphia.Datastore:find|findOne|createQuery|save|delete|update",
+        "org.springframework.data.mongodb.core.MongoTemplate:find|findOne|insert|save|update|remove|aggregate",
+        "org.elasticsearch.client.RestHighLevelClient:search|index|update|delete|bulk",
+        "org.elasticsearch.action.search.SearchRequest:source|query",
+        "org.elasticsearch.action.index.IndexRequest:source|id",
+        "org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate:query|search|index|save|delete"
+      ]
+    },
+    {
+      "sink_name": "SPRING_SECURITY_BYPASS",
+      "sink_desc": "Spring Security绕过（权限校验缺失/配置错误）",
+      "severity_level": "High",
+      "cwe": "CWE-284",
+      "sinks": [
+        "org.springframework.security.config.annotation.web.builders.HttpSecurity:authorizeRequests|authorizeHttpRequests|permitAll|anonymous|hasRole|hasAuthority",
+        "org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter:configure",
+        "org.springframework.security.web.access.intercept.FilterSecurityInterceptor:beforeInvocation|afterInvocation",
+        "org.springframework.security.access.intercept.AbstractSecurityInterceptor:beforeInvocation|afterInvocation",
+        "org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity:prePostEnabled|securedEnabled|jsr250Enabled"
+      ]
+    },
+    {
+      "sink_name": "ACTUATOR_EXPOSURE",
+      "sink_desc": "Spring Boot Actuator敏感端点暴露",
+      "severity_level": "Medium",
+      "cwe": "CWE-200",
+      "sinks": [
+        "org.springframework.boot.actuate.endpoint.web.servlet.WebMvcEndpointHandlerMapping:getHandler|handle",
+        "org.springframework.boot.actuate.endpoint.Endpoint:invoke|getInvoker",
+        "org.springframework.boot.actuate.endpoint.web.annotation.ControllerEndpoint:handle|handleRequest",
+        "org.springframework.boot.actuate.endpoint.web.annotation.ServletEndpoint:doGet|doPost|service"
+      ]
+    },
+    {
+      "sink_name": "GRAPHQL_INJECTION",
+      "sink_desc": "GraphQL注入（深度限制缺失/字段选择）",
+      "severity_level": "Medium",
+      "cwe": "CWE-400",
+      "sinks": [
+        "graphql.ExecutionInput:getQuery|getVariables|getOperationName|getExecutionContext",
+        "graphql.GraphQL:execute|executeAsync|buildContext",
+        "graphql.execution.ExecutionContext:getDocument|getOperationDefinition|getRoot|getVariables",
+        "com.graphql-java-kickstart.graphql.GraphQLQueryResolver:resolve|getQuery",
+        "com.graphql-java-kickstart.graphql.GraphQLMutationResolver:resolve|getMutation"
+      ]
+    }
+  ]
+}
+

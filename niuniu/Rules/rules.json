@@ -1,0 +1,2365 @@
+{
+  "depth": 6,
+  "max_seconds": 60,
+  "path_exclusions": [
+    ".idea", "resources", "test*", "META-INF", ".git", "docs", "example*", "node_modules", "*.md", "build", "out", "target"
+  ],
+  "sink_rules": [
+    {
+      "sink_name": "RCE",
+      "sink_desc": "任意代码执行",
+      "severity_level": "High",
+      "cwe": "CWE-78",
+      "sinks": [
+        "java.lang.Runtime:exec",
+        "java.lang.Runtime:getRuntime",
+        "java.lang.ProcessBuilder:start",
+        "java.lang.ProcessBuilder:<init>",
+        "javax.script.ScriptEngine:eval",
+        "javax.script.ScriptEngineManager:eval",
+        "groovy.lang.GroovyShell:evaluate",
+        "groovy.lang.GroovyShell:parse",
+        "groovy.util.GroovyScriptEngine:run",
+        "org.codehaus.groovy.runtime.InvokerHelper:runScript",
+        "org.apache.commons.jexl3.JexlEngine:createScript",
+        "org.apache.commons.jexl2.JexlEngine:createScript",
+        "bsh.Interpreter:eval",
+        "org.mozilla.javascript.Context:evaluateString",
+        "org.python.util.PythonInterpreter:exec",
+        "org.python.util.PythonInterpreter:eval",
+        "org.springframework.expression.ExpressionParser:parseExpression"
+      ]
+    },
+    {
+      "sink_name": "UNSERIALIZE",
+      "sink_desc": "反序列化",
+      "severity_level": "High",
+      "cwe": "CWE-502",
+      "sinks": [
+        "java.io.ObjectInputStream:readObject",
+        "java.io.ObjectInputStream:readUnshared",
+        "org.yaml.snakeyaml.Yaml:load",
+        "org.yaml.snakeyaml.Yaml:loadAs",
+        "org.yaml.snakeyaml.Yaml:loadAll",
+        "com.thoughtworks.xstream.XStream:fromXML",
+        "com.alibaba.fastjson.JSON:parse|parseObject|parseArray",
+        "com.alibaba.fastjson2.JSON:parse|parseObject",
+        "com.google.gson.Gson:fromJson",
+        "com.fasterxml.jackson.databind.ObjectMapper:readValue",
+        "org.codehaus.jackson.map.ObjectMapper:readValue",
+        "java.beans.XMLDecoder:readObject",
+        "net.sf.json.JSONObject:toBean",
+        "com.caucho.hessian.io.HessianInput:readObject",
+        "com.caucho.burlap.io.BurlapInput:readObject"
+      ]
+    },
+    {
+      "sink_name": "SSRF",
+      "sink_desc": "服务端请求伪造",
+      "severity_level": "Medium",
+      "cwe": "CWE-918",
+      "sinks": [
+        "java.net.URL:openConnection|openStream|<init>",
+        "java.net.URLConnection:connect",
+        "java.net.HttpURLConnection:connect",
+        "org.apache.http.client.HttpClient:execute",
+        "org.apache.http.impl.client.CloseableHttpClient:execute",
+        "org.apache.http.client.methods.HttpGet:<init>",
+        "org.apache.http.client.methods.HttpPost:<init>",
+        "okhttp3.OkHttpClient:newCall",
+        "okhttp3.Request:newBuilder",
+        "org.springframework.web.client.RestTemplate:exchange|getForObject|getForEntity|postForObject|postForEntity",
+        "org.springframework.web.reactive.function.client.WebClient:get|post",
+        "retrofit2.Retrofit:create",
+        "org.apache.commons.httpclient.HttpClient:executeMethod",
+        "org.jsoup.Jsoup:connect",
+        "java.net.URI:<init>",
+        "java.net.Socket:<init>",
+        "javax.imageio.ImageIO:read"
+      ]
+    },
+    {
+      "sink_name": "SQLI",
+      "sink_desc": "SQL注入",
+      "severity_level": "High",
+      "cwe": "CWE-89",
+      "sinks": [
+        "java.sql.Statement:execute|executeQuery|executeUpdate|executeBatch|executeLargeUpdate",
+        "java.sql.Connection:prepareStatement|prepareCall|nativeSQL",
+        "org.hibernate.Session:createQuery|createSQLQuery",
+        "org.hibernate.Query:createQuery|executeUpdate",
+        "org.mybatis.spring.SqlSessionTemplate:selectOne|selectList|update|delete|insert",
+        "javax.persistence.EntityManager:createQuery|createNativeQuery",
+        "org.springframework.jdbc.core.JdbcTemplate:query|queryForList|queryForObject|update|execute",
+        "org.apache.ibatis.session.SqlSession:selectOne|selectList",
+        "org.jooq.DSLContext:query|execute"
+      ]
+    },
+    {
+      "sink_name": "XSS",
+      "sink_desc": "跨站脚本",
+      "severity_level": "Medium",
+      "cwe": "CWE-79",
+      "sinks": [
+        "javax.servlet.http.HttpServletResponse:getWriter|getOutputStream|setHeader|addHeader",
+        "javax.servlet.ServletResponse:getWriter|getOutputStream",
+        "javax.servlet.jsp.JspWriter:print|println|write",
+        "org.springframework.web.servlet.ModelAndView:addObject|addAllObjects",
+        "org.springframework.ui.Model:addAttribute",
+        "org.springframework.ui.ModelMap:addAttribute",
+        "org.thymeleaf.context.Context:setVariable",
+        "freemarker.template.Template:process",
+        "org.springframework.web.servlet.view.freemarker.FreeMarkerView:setAttributes"
+      ]
+    },
+    {
+      "sink_name": "PATH_TRAVERSAL",
+      "sink_desc": "路径遍历/任意文件访问",
+      "severity_level": "Medium",
+      "cwe": "CWE-22",
+      "sinks": [
+        "java.io.File:<init>|delete|deleteOnExit",
+        "java.io.FileInputStream:<init>",
+        "java.io.FileOutputStream:<init>",
+        "java.io.FileReader:<init>",
+        "java.io.FileWriter:<init>",
+        "java.io.RandomAccessFile:<init>",
+        "java.nio.file.Paths:get",
+        "java.nio.file.Files:newInputStream|newOutputStream|newBufferedReader|newBufferedWriter|write|writeString|readAllBytes|readAllLines|readString|delete|copy|move",
+        "org.apache.commons.io.FileUtils:openInputStream|openOutputStream|readFileToString|writeStringToFile|copyFile|deleteDirectory",
+        "org.springframework.core.io.FileSystemResource:<init>",
+        "org.springframework.web.multipart.MultipartFile:transferTo"
+      ]
+    },
+    {
+      "sink_name": "FILE_WRITE",
+      "sink_desc": "任意文件写入",
+      "severity_level": "High",
+      "cwe": "CWE-73",
+      "sinks": [
+        "java.io.FileOutputStream:write",
+        "java.io.FileWriter:write",
+        "java.io.RandomAccessFile:write",
+        "java.nio.file.Files:write|writeString",
+        "org.apache.commons.io.FileUtils:writeStringToFile|writeByteArrayToFile",
+        "org.springframework.util.FileCopyUtils:copy"
+      ]
+    },
+    {
+      "sink_name": "FILE_DELETE",
+      "sink_desc": "任意文件删除",
+      "severity_level": "High",
+      "cwe": "CWE-73",
+      "sinks": [
+        "java.io.File:delete|deleteOnExit",
+        "java.nio.file.Files:delete|deleteIfExists",
+        "org.apache.commons.io.FileUtils:deleteDirectory|forceDelete"
+      ]
+    },
+    {
+      "sink_name": "ZIP_SLIP",
+      "sink_desc": "Zip解压路径穿越",
+      "severity_level": "High",
+      "cwe": "CWE-22",
+      "sinks": [
+        "java.util.zip.ZipInputStream:getNextEntry",
+        "java.util.zip.ZipFile:getInputStream",
+        "java.util.zip.ZipEntry:getName"
+      ]
+    },
+    {
+      "sink_name": "TEMPLATE_INJECTION",
+      "sink_desc": "模板注入（FreeMarker/Thymeleaf/Velocity）",
+      "severity_level": "High",
+      "cwe": "CWE-94",
+      "sinks": [
+        "freemarker.template.Template:process",
+        "org.springframework.web.servlet.view.freemarker.FreeMarkerView:setAttributes",
+        "org.apache.velocity.VelocityEngine:evaluate",
+        "org.apache.velocity.app.Velocity:evaluate",
+        "org.thymeleaf.TemplateEngine:process"
+      ]
+    },
+    {
+      "sink_name": "REDIRECT",
+      "sink_desc": "未校验的URL重定向",
+      "severity_level": "Medium",
+      "cwe": "CWE-601",
+      "sinks": [
+        "javax.servlet.http.HttpServletResponse:sendRedirect|setHeader",
+        "org.springframework.web.servlet.view.RedirectView:<init>|setUrl"
+      ]
+    },
+    {
+      "sink_name": "LDAP_INJECTION",
+      "sink_desc": "LDAP查询注入",
+      "severity_level": "High",
+      "cwe": "CWE-90",
+      "sinks": [
+        "javax.naming.directory.DirContext:search|lookup",
+        "javax.naming.directory.InitialDirContext:search|lookup",
+        "org.springframework.ldap.core.LdapTemplate:search|lookup|authenticate"
+      ]
+    },
+    {
+      "sink_name": "XXE",
+      "sink_desc": "XML外部实体注入",
+      "severity_level": "High",
+      "cwe": "CWE-611",
+      "sinks": [
+        "javax.xml.parsers.DocumentBuilder:parse",
+        "javax.xml.parsers.SAXParser:parse",
+        "javax.xml.parsers.DocumentBuilderFactory:newDocumentBuilder",
+        "javax.xml.parsers.SAXParserFactory:newSAXParser",
+        "javax.xml.stream.XMLInputFactory:createXMLStreamReader",
+        "javax.xml.transform.Transformer:transform",
+        "javax.xml.transform.TransformerFactory:newTransformer",
+        "org.dom4j.io.SAXReader:read",
+        "org.jdom2.input.SAXBuilder:build",
+        "org.xml.sax.XMLReader:parse",
+        "org.apache.commons.digester3.Digester:parse"
+      ]
+    },
+    {
+      "sink_name": "EL_INJECTION",
+      "sink_desc": "EL/SpEL表达式注入",
+      "severity_level": "High",
+      "cwe": "CWE-94",
+      "sinks": [
+        "javax.el.ELProcessor:eval|getValue",
+        "javax.el.ExpressionFactory:createValueExpression",
+        "javax.el.ValueExpression:getValue",
+        "javax.el.MethodExpression:invoke",
+        "org.springframework.expression.spel.standard.SpelExpressionParser:parseExpression"
+      ]
+    },
+    {
+      "sink_name": "REFLECTION",
+      "sink_desc": "反射/动态调用",
+      "severity_level": "Medium",
+      "cwe": "CWE-1037",
+      "sinks": [
+        "java.lang.Class:forName",
+        "java.lang.ClassLoader:loadClass",
+        "java.lang.reflect.Method:invoke",
+        "java.lang.reflect.Constructor:newInstance",
+        "java.lang.reflect.Field:set|get"
+      ]
+    },
+    {
+      "sink_name": "LOG_INJECTION",
+      "sink_desc": "日志注入",
+      "severity_level": "Low",
+      "cwe": "CWE-117",
+      "sinks": [
+        "org.slf4j.Logger:info|debug|warn|error",
+        "org.apache.log4j.Logger:info|debug|warn|error",
+        "java.util.logging.Logger:info|warning|severe"
+      ]
+    },
+    {
+      "sink_name": "CRYPTO_WEAKNESS",
+      "sink_desc": "弱加密算法/不安全配置",
+      "severity_level": "Medium",
+      "cwe": "CWE-327",
+      "sinks": [
+        "javax.crypto.Cipher:getInstance",
+        "java.security.MessageDigest:getInstance",
+        "java.security.SecureRandom:<init>",
+        "java.security.KeyPairGenerator:getInstance",
+        "javax.crypto.KeyGenerator:getInstance"
+      ]
+    },
+    {
+      "sink_name": "SHIRO_REMEMBERME_INSECURE",
+      "sink_desc": "Shiro RememberMe 不安全密钥配置",
+      "severity_level": "High",
+      "cwe": "CWE-798",
+      "sinks": [
+        "org.apache.shiro.web.mgt.CookieRememberMeManager:setCipherKey"
+      ]
+    },
+    {
+      "sink_name": "DRUID_EXPOSED",
+      "sink_desc": "Druid监控未授权暴露",
+      "severity_level": "Medium",
+      "cwe": "CWE-284",
+      "sinks": [
+        "com.alibaba.druid.support.http.StatViewServlet:doGet|service",
+        "com.alibaba.druid.support.http.WebStatFilter:doFilter"
+      ]
+    },
+    {
+      "sink_name": "ACTUATOR_EXPOSED",
+      "sink_desc": "Spring Boot Actuator 端点暴露",
+      "severity_level": "Medium",
+      "cwe": "CWE-200",
+      "sinks": [
+        "org.springframework.boot.actuate.endpoint.web.servlet.WebMvcEndpointHandlerMapping:getHandler"
+      ]
+    },
+    {
+      "sink_name": "SWAGGER_EXPOSED",
+      "sink_desc": "Swagger 暴露",
+      "severity_level": "Low",
+      "cwe": "CWE-200",
+      "sinks": [
+        "springfox.documentation.swagger2.annotations.EnableSwagger2:<init>",
+        "springfox.documentation.spring.web.plugins.Docket:<init>|select"
+      ]
+    },
+    {
+      "sink_name": "JWT_WEAK_SECRET",
+      "sink_desc": "JWT 弱密钥或不安全配置",
+      "severity_level": "High",
+      "cwe": "CWE-326",
+      "sinks": [
+        "io.jsonwebtoken.Jwts:parser|setSigningKey",
+        "io.jsonwebtoken.SignatureAlgorithm:HS256|HS384|HS512",
+        "com.auth0.jwt.JWT:require|decode",
+        "org.springframework.security.oauth2.jwt.JwtDecoder:decode",
+        "io.jsonwebtoken.impl.DefaultJwtBuilder:signWith"
+      ]
+    },
+    {
+      "sink_name": "JWT_NO_VERIFY",
+      "sink_desc": "JWT 未验证签名",
+      "severity_level": "Critical",
+      "cwe": "CWE-347",
+      "sinks": [
+        "io.jsonwebtoken.Jwts:parser|setAllowedClockSkewSeconds",
+        "com.auth0.jwt.JWT:decode|require",
+        "org.springframework.security.oauth2.jwt.NimbusJwtDecoder:withJwkSetUri"
+      ]
+    },
+    {
+      "sink_name": "OAUTH2_REDIRECT_URI",
+      "sink_desc": "OAuth2 重定向URI未校验",
+      "severity_level": "High",
+      "cwe": "CWE-601",
+      "sinks": [
+        "org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest:getAuthorizationRequest",
+        "org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest:getRedirectUri",
+        "org.springframework.security.oauth2.client.registration.ClientRegistration:getRedirectUri"
+      ]
+    },
+    {
+      "sink_name": "OAUTH2_STATE_MISSING",
+      "sink_desc": "OAuth2 状态参数缺失",
+      "severity_level": "Medium",
+      "cwe": "CWE-352",
+      "sinks": [
+        "org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter:attemptAuthentication"
+      ]
+    },
+    {
+      "sink_name": "HARDCODED_SECRET",
+      "sink_desc": "硬编码密钥/密码",
+      "severity_level": "High",
+      "cwe": "CWE-798",
+      "sinks": [
+        "java.lang.String:<init>",
+        "java.util.Properties:setProperty|load"
+      ]
+    },
+    {
+      "sink_name": "INSECURE_RANDOM",
+      "sink_desc": "不安全随机数生成",
+      "severity_level": "Medium",
+      "cwe": "CWE-330",
+      "sinks": [
+        "java.util.Random:nextInt|nextLong|nextDouble",
+        "java.lang.Math:random",
+        "java.security.SecureRandom:<init>|getInstance"
+      ]
+    },
+    {
+      "sink_name": "WEAK_SESSION_MANAGEMENT",
+      "sink_desc": "弱会话管理",
+      "severity_level": "Medium",
+      "cwe": "CWE-613",
+      "sinks": [
+        "javax.servlet.http.HttpSession:getId|setAttribute|getAttribute",
+        "org.springframework.session.Session:getId|setAttribute",
+        "org.apache.shiro.subject.support.DefaultSubjectContext:getSession"
+      ]
+    },
+    {
+      "sink_name": "SPRING_SECURITY_MISCONFIG",
+      "sink_desc": "Spring Security 配置问题",
+      "severity_level": "High",
+      "cwe": "CWE-284",
+      "sinks": [
+        "org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter:configure",
+        "org.springframework.security.config.annotation.web.builders.HttpSecurity:authorizeRequests|csrf",
+        "org.springframework.security.web.SecurityFilterChain:getFilters"
+      ]
+    },
+    {
+      "sink_name": "SHIRO_RMEMEMBERME_WEAK",
+      "sink_desc": "Shiro RememberMe 弱密钥",
+      "severity_level": "High",
+      "cwe": "CWE-798",
+      "sinks": [
+        "org.apache.shiro.web.mgt.CookieRememberMeManager:setCipherKey",
+        "org.apache.shiro.mgt.AbstractRememberMeManager:setCipherKey"
+      ]
+    },
+    {
+      "sink_name": "SHIRO_AUTHENTICATOR_WEAK",
+      "sink_desc": "Shiro 认证器不安全配置",
+      "severity_level": "High",
+      "cwe": "CWE-287",
+      "sinks": [
+        "org.apache.shiro.authc.credential.SimpleCredentialsMatcher:doCredentialsMatch",
+        "org.apache.shiro.realm.Realm:getAuthenticationInfo"
+      ]
+    },
+    {
+      "sink_name": "REDIS_UNSAFE",
+      "sink_desc": "Redis 不安全配置（未授权访问/弱密码）",
+      "severity_level": "High",
+      "cwe": "CWE-306",
+      "sinks": [
+        "redis.clients.jedis.Jedis:<init>|connect",
+        "org.springframework.data.redis.connection.RedisConnectionFactory:getConnection",
+        "redis.clients.jedis.JedisPool:<init>"
+      ]
+    },
+    {
+      "sink_name": "LOG4J2_JNDI_LOOKUP",
+      "sink_desc": "Log4j2 JNDI 查找漏洞",
+      "severity_level": "Critical",
+      "cwe": "CWE-502",
+      "sinks": [
+        "org.apache.logging.log4j.core.lookup.JndiLookup:lookup",
+        "org.apache.logging.log4j.core.net.JndiManager:lookup",
+        "javax.naming.InitialContext:lookup"
+      ]
+    },
+    {
+      "sink_name": "LOG4J2_SOCKET_APPENDER",
+      "sink_desc": "Log4j2 不安全的 SocketAppender",
+      "severity_level": "High",
+      "cwe": "CWE-94",
+      "sinks": [
+        "org.apache.logging.log4j.core.appender.SocketAppender:<init>|createAppender",
+        "org.apache.logging.log4j.core.net.TcpSocketManager:<init>"
+      ]
+    },
+    {
+      "sink_name": "DESERIALIZATION_GADGET",
+      "sink_desc": "反序列化 Gadget 链风险",
+      "severity_level": "Critical",
+      "cwe": "CWE-502",
+      "sinks": [
+        "java.io.ObjectInputStream:readObject|readUnshared",
+        "org.apache.commons.collections.functors.InvokerTransformer:transform",
+        "org.apache.commons.collections4.functors.InvokerTransformer:transform",
+        "org.apache.xbean.naming.context.ContextUtil:readObject"
+      ]
+    },
+    {
+      "sink_name": "FASTJSON_AUTOTYPE",
+      "sink_desc": "Fastjson AutoType 漏洞",
+      "severity_level": "Critical",
+      "cwe": "CWE-502",
+      "sinks": [
+        "com.alibaba.fastjson.parser.ParserConfig:enableAutoType|setAutoTypeSupport",
+        "com.alibaba.fastjson2.JSONReader:enableSupportAutoType",
+        "com.alibaba.fastjson.JSON:parseObject|parseArray|parse"
+      ]
+    },
+    {
+      "sink_name": "THYMELEAF_SSTI",
+      "sink_desc": "Thymeleaf 模板注入",
+      "severity_level": "High",
+      "cwe": "CWE-94",
+      "sinks": [
+        "org.thymeleaf.TemplateEngine:process|processString",
+        "org.thymeleaf.context.Context:setVariable",
+        "org.thymeleaf.standard.expression.StandardExpressionParser:parseExpression"
+      ]
+    },
+    {
+      "sink_name": "VELOCITY_SSTI",
+      "sink_desc": "Velocity 模板注入",
+      "severity_level": "High",
+      "cwe": "CWE-94",
+      "sinks": [
+        "org.apache.velocity.app.VelocityEngine:evaluate|mergeTemplate",
+        "org.apache.velocity.Template:process",
+        "org.apache.velocity.runtime.RuntimeInstance:evaluate"
+      ]
+    },
+    {
+      "sink_name": "QUARKUS_INSECURE_CONFIG",
+      "sink_desc": "Quarkus 不安全配置",
+      "severity_level": "High",
+      "cwe": "CWE-284",
+      "sinks": [
+        "io.quarkus.security.vertx.http.runtime.SecurityHandler:authenticate",
+        "io.quarkus.security.vertx.http.runtime.SecurityHandler:authorize",
+        "io.quarkus.security.oidc.runtime.OidcAuthenticationMechanism:authenticate"
+      ]
+    },
+    {
+      "sink_name": "MICRONAUT_SECURITY_WEAK",
+      "sink_desc": "Micronaut 安全配置弱",
+      "severity_level": "High",
+      "cwe": "CWE-284",
+      "sinks": [
+        "io.micronaut.security.rules.SecurityRule:check",
+        "io.micronaut.security.authentication.AuthenticationProvider:authenticate",
+        "io.micronaut.security.token.jwt.render.AccessTokenRenderer:renderToken"
+      ]
+    },
+    {
+      "sink_name": "VERTX_UNSAFE_ROUTER",
+      "sink_desc": "Vert.x 不安全路由配置",
+      "severity_level": "Medium",
+      "cwe": "CWE-284",
+      "sinks": [
+        "io.vertx.ext.web.Router:route",
+        "io.vertx.ext.web.handler.AuthenticationHandler:handle",
+        "io.vertx.ext.web.handler.AuthorizationHandler:handle"
+      ]
+    },
+    {
+      "sink_name": "SPRING_BOOT_ACTUATOR_EXPOSED",
+      "sink_desc": "Spring Boot Actuator 端点暴露",
+      "severity_level": "High",
+      "cwe": "CWE-200",
+      "sinks": [
+        "org.springframework.boot.actuate.endpoint.web.servlet.AbstractWebMvcEndpointHandlerMapping:handle",
+        "org.springframework.boot.actuate.endpoint.annotation.Endpoint:operation",
+        "org.springframework.boot.actuate.autoconfigure.endpoint.web.WebEndpointProperties:exposure"
+      ]
+    },
+    {
+      "sink_name": "GRAPHQL_INJECTION",
+      "sink_desc": "GraphQL 注入漏洞",
+      "severity_level": "High",
+      "cwe": "CWE-943",
+      "sinks": [
+        "graphql.ExecutionInput:query|variables",
+        "graphql.GraphQL:execute",
+        "com.graphqljava.graphqljva.GraphQL:execute"
+      ]
+    },
+    {
+      "sink_name": "QUERYDSL_SQLI",
+      "sink_desc": "QueryDSL SQL注入",
+      "severity_level": "High",
+      "cwe": "CWE-89",
+      "sinks": [
+        "com.querydsl.sql.SQLQuery:where",
+        "com.querydsl.core.types.Expression:accept",
+        "com.querydsl.jpa.impl.JPAQuery:where"
+      ]
+    },
+    {
+      "sink_name": "APACHE_IGNITE_UNSAFE",
+      "sink_desc": "Apache Ignite 不安全配置",
+      "severity_level": "High",
+      "cwe": "CWE-306",
+      "sinks": [
+        "org.apache.ignite.Ignition:start",
+        "org.apache.ignite.configuration.IgniteConfiguration:setClientConnectorConfiguration",
+        "org.apache.ignite.client.ClientConfiguration:setAddresses"
+      ]
+    },
+    {
+      "sink_name": "HIBERNATE_QUERY_INJECTION",
+      "sink_desc": "Hibernate 查询注入",
+      "severity_level": "High",
+      "cwe": "CWE-89",
+      "sinks": [
+        "org.hibernate.Session:createQuery|createSQLQuery",
+        "org.hibernate.query.Query:setParameter",
+        "javax.persistence.EntityManager:createQuery|createNativeQuery"
+      ]
+    },
+    {
+      "sink_name": "NASHORN_CODE_INJECTION",
+      "sink_desc": "Nashorn 代码注入",
+      "severity_level": "Critical",
+      "cwe": "CWE-94",
+      "sinks": [
+        "jdk.nashorn.api.scripting.ScriptObjectMirror:call",
+        "jdk.nashorn.api.scripting.NashornScriptEngineFactory:getScriptEngine",
+        "javax.script.ScriptEngine:eval"
+      ]
+    },
+    {
+      "sink_name": "GROOVY_SHELL_INJECTION",
+      "sink_desc": "Groovy Shell 代码注入",
+      "severity_level": "Critical",
+      "cwe": "CWE-94",
+      "sinks": [
+        "groovy.lang.GroovyShell:evaluate|parse",
+        "groovy.util.Eval:me|xy",
+        "org.codehaus.groovy.runtime.ProcessGroovyMethods:execute"
+      ]
+    },
+    {
+      "sink_name": "MONGODB_INJECTION",
+      "sink_desc": "SheepdogMongoDB NoSQL注入",
+      "severity_level": "High",
+      "cwe": "CWE-943",
+      "sinks": [
+        "com.mongodb.client.MongoCollection:find|aggregate",
+        "org.springframework.data.mongodb.core.MongoTemplate:find|aggregate",
+        "org.mongodb.morphia.query.Query:filter|field"
+      ]
+    },
+    {
+      "sink_name": "ELASTICSEARCH_INJECTION",
+      "sink_desc": "Elasticsearch 注入",
+      "severity_level": "High",
+      "cwe": "CWE-943",
+      "sinks": [
+        "org.elasticsearch.client.RestHighLevelClient:search|index",
+        "org.springframework.data.elasticsearch.core.ElasticsearchOperations:search",
+        "co.elastic.clients.elasticsearch.ElasticsearchClient:search"
+      ]
+    },
+    {
+      "sink_name": "SPRING_DATA_R2DBC_INJECTION",
+      "sink_desc": "Spring Data R2DBC SQL注入",
+      "severity_level": "High",
+      "cwe": "CWE-89",
+      "sinks": [
+        "org.springframework.data.r2dbc.core.R2dbcEntityTemplate:select|update",
+        "io.r2dbc.spi.Statement:bind|add",
+        "org.springframework.r2dbc.core.DatabaseClient:execute|select"
+      ]
+    },
+    {
+      "sink_name": "JAKARTA_EE_SECURITY_WEAK",
+      "sink_desc": "Jakarta EE 安全配置弱",
+      "severity_level": "Medium",
+      "cwe": "CWE-284",
+      "sinks": [
+        "jakarta.security.enterprise.identitystore.IdentityStore:validate",
+        "jakarta.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism:validateRequest",
+        "jakarta.security.enterprise.SecurityContext:hasAccessToWebResource"
+      ]
+    },
+    {
+      "sink_name": "WEBSOCKET_SECURITY_WEAK",
+      "sink_desc": "WebSocket 安全配置弱",
+      "severity_level": "Medium",
+      "cwe": "CWE-284",
+      "sinks": [
+        "jakarta.websocket.server.ServerEndpoint:onMessage|onOpen",
+        "org.springframework.web.socket.WebSocketHandler:handleMessage",
+        "io.vertx.core.http.ServerWebSocket:handler"
+      ]
+    },
+    {
+      "sink_name": "FREEMARKER_SSTI",
+      "sink_desc": "FreeMarker 模板注入",
+      "severity_level": "High",
+      "cwe": "CWE-94",
+      "sinks": [
+        "freemarker.template.Template:process",
+        "freemarker.template.Configuration:getTemplate",
+        "freemarker.core.Environment:process"
+      ]
+    },
+    {
+      "sink_name": "IDOR_HORIZONTAL",
+      "sink_desc": "水平越权（IDOR）",
+      "severity_level": "High",
+      "cwe": "CWE-639",
+      "sinks": [
+        "org.springframework.data.jpa.repository.JpaRepository:findById|getById",
+        "org.mybatis.spring.SqlSessionTemplate:selectOne|selectList",
+        "org.hibernate.Session:get|load"
+      ]
+    },
+    {
+      "sink_name": "IDOR_VERTICAL",
+      "sink_desc": "垂直越权（权限提升）",
+      "severity_level": "Critical",
+      "cwe": "CWE-269",
+      "sinks": [
+        "org.springframework.security.core.authority.SimpleGrantedAuthority:<init>",
+        "org.apache.shiro.subject.support.DefaultSubjectContext:setPrincipal",
+        "org.springframework.security.core.Authentication:getAuthorities"
+      ]
+    },
+    {
+      "sink_name": "SENSITIVE_INFO_LEAK",
+      "sink_desc": "敏感信息泄露",
+      "severity_level": "Medium",
+      "cwe": "CWE-209",
+      "sinks": [
+        "java.lang.Exception:printStackTrace|getMessage",
+        "org.springframework.web.servlet.ModelAndView:addObject",
+        "javax.servlet.http.HttpServletResponse:sendError",
+        "org.slf4j.Logger:error|warn"
+      ]
+    }
+  ],
+  "source_rules": [
+    {
+      "source_name": "HTTP_PARAMETER",
+      "sources": [
+        "javax.servlet.http.HttpServletRequest:getParameter|getParameterValues|getParameterMap|getHeader|getHeaders|getCookies|getQueryString|getInputStream|getReader|getPathInfo|getServletPath|getContextPath"
+      ]
+    },
+    {
+      "source_name": "SPRING_REQUEST",
+      "sources": [
+        "org.springframework.web.bind.annotation.RequestParam",
+        "org.springframework.web.bind.annotation.PathVariable",
+        "org.springframework.web.bind.annotation.RequestBody",
+        "org.springframework.web.bind.annotation.RequestHeader",
+        "org.springframework.web.bind.annotation.CookieValue",
+        "org.springframework.web.bind.annotation.ModelAttribute"
+      ]
+    },
+    {
+      "source_name": "FILE_UPLOAD_NAME",
+      "sources": [
+        "org.springframework.web.multipart.MultipartFile:getOriginalFilename|getName",
+        "javax.servlet.http.Part:getSubmittedFileName|getName"
+      ]
+    },
+    {
+      "source_name": "REQUEST_URL",
+      "sources": [
+        "javax.servlet.http.HttpServletRequest:getRequestURI|getRequestURL|getPathInfo|getServletPath|getContextPath"
+      ]
+    },
+    {
+      "source_name": "WEBFLUX_REQUEST",
+      "sources": [
+        "org.springframework.web.reactive.function.server.ServerRequest:queryParam|pathVariable|bodyToMono|headers"
+      ]
+    },
+    {
+      "source_name": "ENVIRONMENT_VARIABLE",
+      "sources": [
+        "java.lang.System:getProperty|getenv",
+        "java.lang.Runtime:getRuntime"
+      ]
+    },
+    {
+      "source_name": "DATABASE_RESULT",
+      "sources": [
+        "java.sql.ResultSet:getString|getObject|getBytes",
+        "org.springframework.jdbc.core.RowMapper:mapRow"
+      ]
+    },
+    {
+      "source_name": "CONFIGURATION",
+      "sources": [
+        "java.util.Properties:getProperty",
+        "org.springframework.core.env.Environment:getProperty",
+        "com.typesafe.config.Config:getString|getConfig"
+      ]
+    },
+    {
+      "source_name": "REDIS_CACHE",
+      "sources": [
+        "org.springframework.data.redis.core.RedisTemplate:opsForValue|get|boundValueOps",
+        "redis.clients.jedis.Jedis:get|hget|mget"
+      ]
+    },
+    {
+      "source_name": "MESSAGE_QUEUE",
+      "sources": [
+        "javax.jms.Message:getText|getBody",
+        "org.springframework.amqp.core.Message:getBody"
+      ]
+    }
+  ],
+  "pattern_rules": {
+    "SQL_CONCAT": [
+      "java.lang.StringBuilder:append|insert|replace",
+      "java.lang.StringBuffer:append",
+      "java.lang.String:format|concat|join"
+    ],
+    "FASTJSON_AUTOTYPE": [
+      "com.alibaba.fastjson.parser.ParserConfig:enableAutoType|setAutoTypeSupport",
+      "com.alibaba.fastjson2.JSONReader:enableSupportAutoType"
+    ],
+    "LOG4J2_JNDI": [
+      "org.apache.logging.log4j.core.lookup.JndiLookup:lookup",
+      "javax.naming.InitialContext:lookup"
+    ],
+    "MYBATIS_DYNAMIC_SQL": [
+      "org.apache.ibatis.jdbc.SQL:toString",
+      "org.apache.ibatis.session.SqlSession:selectList|selectOne"
+    ],
+    "SPRING_JDBC_DYNAMIC": [
+      "org.springframework.jdbc.core.JdbcTemplate:query|update",
+      "org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate:query|update"
+    ],
+    "JSP_UNENCODED_OUTPUT": [
+      "javax.servlet.jsp.JspWriter:print|println|write",
+      "javax.servlet.http.HttpServletResponse:setHeader|addHeader"
+    ],
+    "EL_DIRECT_RENDER": [
+      "javax.el.ELProcessor:eval|getValue",
+      "org.springframework.expression.spel.standard.SpelExpressionParser:parseExpression"
+    ],
+    "TEMPLATE_DANGEROUS_FUNCS": [
+      "freemarker.template.Configuration:setObjectWrapper",
+      "freemarker.template.Template:process",
+      "org.thymeleaf.TemplateEngine:process",
+      "org.apache.velocity.VelocityEngine:evaluate|init"
+    ],
+    "FILE_IO_IN_TEMPLATE": [
+      "java.io.File:<init>|delete",
+      "java.io.FileInputStream:<init>",
+      "java.io.FileOutputStream:<init>",
+      "java.nio.file.Files:write|readAllBytes|readString|delete|copy|move"
+    ],
+    "PATH_CONCAT": [
+      "java.lang.String:concat|replace|replaceAll",
+      "java.nio.file.Paths:get",
+      "java.io.File:<init>"
+    ],
+    "COMMAND_INJECTION": [
+      "java.lang.Runtime:exec|getRuntime",
+      "java.lang.ProcessBuilder:<init>|start",
+      "java.lang.Process:start"
+    ],
+    "REFLECTION_INVOKE": [
+      "java.lang.reflect.Method:invoke",
+      "java.lang.reflect.Constructor:newInstance",
+      "java.lang.Class:forName|newInstance"
+    ],
+    "XML_INJECTION": [
+      "javax.xml.parsers.DocumentBuilder:parse",
+      "javax.xml.transform.Transformer:transform",
+      "org.dom4j.io.SAXReader:read"
+    ],
+    "XXE_NO_PROTECTION": [
+      "javax.xml.parsers.DocumentBuilderFactory:newDocumentBuilder",
+      "javax.xml.parsers.SAXParserFactory:newSAXParser",
+      "javax.xml.transform.TransformerFactory:newTransformer"
+    ],
+    "CRYPTO_WEAK": [
+      "javax.crypto.Cipher:getInstance",
+      "java.security.MessageDigest:getInstance",
+      "java.security.KeyPairGenerator:getInstance"
+    ],
+    "JSON_INJECTION": [
+      "com.alibaba.fastjson.JSON:parse|parseObject|parseArray",
+      "com.google.gson.Gson:fromJson",
+      "com.fasterxml.jackson.databind.ObjectMapper:readValue"
+    ],
+    "LDAP_INJECTION_PATTERN": [
+      "javax.naming.directory.DirContext:search|lookup",
+      "org.springframework.ldap.core.LdapTemplate:search|lookup"
+    ],
+    "REDIRECT_UNVALIDATED": [
+      "javax.servlet.http.HttpServletResponse:sendRedirect",
+      "org.springframework.web.servlet.view.RedirectView:<init>|setUrl"
+    ],
+    "CORS_MISCONFIG": [
+      "org.springframework.web.bind.annotation.CrossOrigin",
+      "javax.servlet.http.HttpServletResponse:setHeader|addHeader"
+    ],
+    "TRUST_BOUNDARY": [
+      "java.net.InetAddress:getHostName|getHostAddress",
+      "javax.servlet.http.HttpServletRequest:getRemoteAddr|getRemoteHost"
+    ]
+  },
+  "template_rules": [
+    {
+      "name": "JSP_UNENCODED_OUTPUT",
+      "vul_type": "XSS",
+      "desc": "JSP 中直接输出未编码",
+      "severity": "Medium",
+      "file_exts": ["jsp", "jspx"],
+      "patterns": [
+        "<%\\s*=\\s*[^%]+%>",
+        "out\\.print(ln)?\\s*\\(",
+        "response\\.setHeader\\s*\\(\\s*\\w+\\s*,",
+        "<c:out\\s+value=\\\"[^\\\"]*\\\"\\s*/?>"
+      ]
+    },
+    {
+      "name": "EL_DIRECT_RENDER",
+      "vul_type": "EL_INJECTION",
+      "desc": "EL/SpEL 表达式直接渲染",
+      "severity": "High",
+      "file_exts": ["jsp", "jspx", "html"],
+      "patterns": [
+        "\\$\\{[^}]+}",
+        "\\*\\{[^}]+}"
+      ]
+    },
+    {
+      "name": "FREEMARKER_DANGEROUS",
+      "vul_type": "TEMPLATE_INJECTION",
+      "desc": "FreeMarker 危险指令/对象访问",
+      "severity": "High",
+      "file_exts": ["ftl"],
+      "patterns": [
+        "<#assign\\s+.*>",
+        "<#include\\s+.*>",
+        "<#import\\s+.*>",
+        "<@\\w+\\s+.*>",
+        "(?:new|class)\\s*\\(.*\\)",
+        "\\?eval|\\?api|\\?object|\\?exec"
+      ]
+    },
+    {
+      "name": "VELOCITY_DANGEROUS",
+      "vul_type": "TEMPLATE_INJECTION",
+      "desc": "Velocity 危险表达式",
+      "severity": "High",
+      "file_exts": ["vm"],
+      "patterns": [
+        "#set\\s*\\(.*\\)",
+        "#parse\\s*\\(.*\\)",
+        "#eval\\s*\\(.*\\)",
+        "\\$!?[a-zA-Z_][\\w.]*",
+        "\\$\\{[^}]+}"
+      ]
+    },
+    {
+      "name": "THYMELEAF_DANGEROUS",
+      "vul_type": "TEMPLATE_INJECTION",
+      "desc": "Thymeleaf 危险表达式",
+      "severity": "High",
+      "file_exts": ["html", "xhtml"],
+      "patterns": [
+        "th:(text|utext|each|with|object)\\s*=\\s*\\\"[^\\\"]*\\\"",
+        "\\*\\{[^}]+}"
+      ]
+    },
+    {
+      "name": "TEMPLATE_FILE_IO",
+      "vul_type": "PATH_TRAVERSAL",
+      "desc": "模板中出现文件读写路径拼接/IO",
+      "severity": "High",
+      "file_exts": ["jsp", "ftl", "vm", "jspx", "html"],
+      "patterns": [
+        "java\\.io\\.File",
+        "java\\.io\\.File(Input|Output)Stream",
+        "java\\.io\\.FileReader|java\\.io\\.FileWriter",
+        "java\\.nio\\.file\\.Files",
+        "\\b(read|write|delete|copy|move)\\b"
+      ]
+    },
+    {
+      "name": "JSP_SQLI_SCRIPTLET",
+      "vul_type": "SQLI",
+      "desc": "JSP 脚本中使用字符串拼接构造 SQL",
+      "severity": "High",
+      "file_exts": ["jsp", "jspx"],
+      "patterns": [
+        "String\\s+sql\\s*=\\s*.*\\+\\s*request\\.getParameter\\([^)]*\\)",
+        "ORDER\\s+BY\\s+.*\\+\\s*request\\.getParameter\\(\\\"orderBy\\\"\\)",
+        "SELECT\\s+.*\\+\\s*request\\.getParameter\\([^)]*\\)"
+      ]
+    },
+    {
+      "name": "DOM_XSS",
+      "vul_type": "XSS",
+      "desc": "前端 DOM 不安全 API 直接渲染用户数据",
+      "severity": "High",
+      "file_exts": ["jsp", "html", "jspx"],
+      "patterns": [
+        "document\\.write\\s*\\(",
+        "innerHTML\\s*=",
+        "outerHTML\\s*=",
+        "eval\\s*\\("
+      ]
+    },
+    {
+      "name": "FORM_NO_CSRF",
+      "vul_type": "CSRF",
+      "desc": "POST 表单缺少 CSRF 令牌（启发式）",
+      "severity": "Medium",
+      "file_exts": ["jsp", "html", "jspx"],
+      "patterns": [
+        "<form[^>]*method=\\\"post\\\"[^>]*>",
+        "(?![\\s\\S]*name=\\\"csrf\\\")"
+      ]
+    },
+    {
+      "name": "COOKIE_FLAGS_MISSING",
+      "vul_type": "SECURITY_MISCONFIG",
+      "desc": "Cookie 未设置 HttpOnly/Secure（启发式）",
+      "severity": "Medium",
+      "file_exts": ["jsp", "jspx"],
+      "patterns": [
+        "new\\s+Cookie\\s*\\(",
+        "response\\.addCookie\\s*\\(",
+        "Set-Cookie:"
+      ]
+    },
+    {
+      "name": "JSP_IDOR_PARAM",
+      "vul_type": "IDOR",
+      "desc": "直接使用敏感参数（id/userId/uid/filename 等）",
+      "severity": "Medium",
+      "file_exts": ["jsp", "jspx"],
+      "patterns": [
+        "request\\.getParameter\\(\\\"(id|userId|uid|file|filename)\\\"\\)",
+        "param\\.\\{(id|userId|uid|file|filename)\\}"
+      ]
+    },
+    {
+      "name": "UNVALIDATED_REDIRECT",
+      "vul_type": "REDIRECT",
+      "desc": "未校验的 URL 重定向",
+      "severity": "Medium",
+      "file_exts": ["jsp", "jspx"],
+      "patterns": [
+        "response\\.sendRedirect\\s*\\(\\s*",
+        "<meta\\s+http-equiv=\\\"refresh\\\"[^>]*url=",
+        "location\\.href\\s*=\\s*"
+      ]
+    },
+    {
+      "name": "JSP_RESPONSE_WRITER_OUTPUT",
+      "vul_type": "XSS",
+      "desc": "Servlet 响应写入未编码",
+      "severity": "Medium",
+      "file_exts": ["jsp", "jspx"],
+      "patterns": [
+        "response\\.getWriter\\(\\)\\.print(ln)?\\s*\\(",
+        "response\\.getWriter\\(\\)\\.write\\s*\\("
+      ]
+    },
+    {
+      "name": "JSP_PAGECONTEXT_OUTPUT",
+      "vul_type": "XSS",
+      "desc": "JSP PageContext 输出未编码",
+      "severity": "Medium",
+      "file_exts": ["jsp", "jspx"],
+      "patterns": [
+        "pageContext\\.getOut\\(\\)\\.print(ln)?\\s*\\("
+      ]
+    },
+    {
+      "name": "PATH_TRAVERSAL_STRICT",
+      "vul_type": "PATH_TRAVERSAL",
+      "desc": "基于参数构造路径且包含穿越指征",
+      "severity": "High",
+      "file_exts": ["jsp", "jspx", "ftl", "vm"],
+      "patterns": [
+        "(new\\s+File|File(Input|Output)Stream|Paths\\.get)\\s*\\(\\s*[^)]*request\\.getParameter\\(\\\"(file|filename|path)\\\"\\)"
+      ]
+    },
+    {
+      "name": "DOM_XSS_EXTRA",
+      "vul_type": "XSS",
+      "desc": "更多 DOM API 直接渲染",
+      "severity": "High",
+      "file_exts": ["jsp", "html", "jspx"],
+      "patterns": [
+        "insertAdjacentHTML\\s*\\(",
+        "\\$\\([^)]*\\)\\.html\\s*\\("
+      ]
+    },
+    {
+      "name": "JAVA_SQLI_STRING_CONCAT",
+      "vul_type": "SQLI",
+      "desc": "Java 文件中字符串拼接构造 SQL 语句",
+      "severity": "High",
+      "file_exts": ["java"],
+      "patterns": [
+        "String\\s+sql\\s*=\\s*.*\\+\\s*request\\.getParameter",
+        "SELECT\\s+.*\\+\\s*request\\.getParameter",
+        "UPDATE\\s+.*\\+\\s*request\\.getParameter",
+        "DELETE\\s+.*\\+\\s*request\\.getParameter",
+        "INSERT\\s+.*\\+\\s*request\\.getParameter",
+        "Statement\\.executeQuery\\s*\\(\\s*.*\\+",
+        "Statement\\.execute\\s*\\(\\s*.*\\+",
+        "createStatement\\(\\)\\.executeQuery\\s*\\(\\s*.*\\+",
+        "prepareStatement\\s*\\(\\s*.*\\+\\s*request\\.getParameter"
+      ]
+    },
+    {
+      "name": "JAVA_UPLOAD_TRANSFER",
+      "vul_type": "FILE_WRITE",
+      "desc": "Java 中上传文件直接写入（transferTo/Part.write/Files.copy）",
+      "severity": "High",
+      "file_exts": ["java"],
+      "patterns": [
+        "MultipartFile\\.transferTo\\s*\\(",
+        "Part\\.write\\s*\\(",
+        "Files\\.copy\\s*\\(\\s*request\\.getInputStream",
+        "Streams\\.copy\\s*\\(\\s*request\\.getInputStream"
+      ]
+    },
+    {
+      "name": "JAVA_XSS_DIRECT_OUTPUT",
+      "vul_type": "XSS",
+      "desc": "Java 中直接输出未编码的用户输入",
+      "severity": "High",
+      "file_exts": ["java"],
+      "patterns": [
+        "response\\.getWriter\\(\\)\\.print\\(\\s*request\\.getParameter",
+        "response\\.getWriter\\(\\)\\.println\\(\\s*request\\.getParameter",
+        "out\\.print\\(\\s*request\\.getParameter",
+        "out\\.println\\(\\s*request\\.getParameter",
+        "response\\.setHeader\\s*\\(\\s*[^,]+,\\s*request\\.getParameter",
+        "response\\.addHeader\\s*\\(\\s*[^,]+,\\s*request\\.getParameter"
+      ]
+    },
+    {
+      "name": "JAVA_PATH_TRAVERSAL",
+      "vul_type": "PATH_TRAVERSAL",
+      "desc": "Java 中基于请求参数构造文件路径",
+      "severity": "High",
+      "file_exts": ["java"],
+      "patterns": [
+        "new\\s+File\\s*\\(\\s*.*request\\.getParameter",
+        "new\\s+FileInputStream\\s*\\(\\s*.*request\\.getParameter",
+        "new\\s+FileOutputStream\\s*\\(\\s*.*request\\.getParameter",
+        "Files\\.readAllBytes\\s*\\(\\s*Paths\\.get\\s*\\(\\s*.*request\\.getParameter",
+        "Files\\.write\\s*\\(\\s*Paths\\.get\\s*\\(\\s*.*request\\.getParameter",
+        "getRealPath\\s*\\(\\s*.*request\\.getParameter",
+        "\\.\\.\/|\\.\\.\\\\"
+      ]
+    },
+    {
+      "name": "JAVA_RCE_RUNTIME_EXEC",
+      "vul_type": "RCE",
+      "desc": "Java 中执行系统命令",
+      "severity": "Critical",
+      "file_exts": ["java"],
+      "patterns": [
+        "Runtime\\.getRuntime\\(\\)\\.exec\\s*\\(",
+        "new\\s+ProcessBuilder\\s*\\(",
+        "ProcessBuilder\\s+\\.\\.\\s*start\\s*\\("
+      ]
+    },
+    {
+      "name": "JAVA_REDIRECT_UNVALIDATED",
+      "vul_type": "REDIRECT",
+      "desc": "Java 中未校验的重定向",
+      "severity": "Medium",
+      "file_exts": ["java"],
+      "patterns": [
+        "response\\.sendRedirect\\s*\\(\\s*request\\.getParameter",
+        "response\\.sendRedirect\\s*\\(\\s*request\\.getHeader",
+        "RedirectView\\s+\\.\\.\\s*<init>\\s*\\(\\s*request\\.getParameter"
+      ]
+    },
+    {
+      "name": "JAVA_XXE_UNSAFE",
+      "vul_type": "XXE",
+      "desc": "Java 中不安全的 XML 解析",
+      "severity": "High",
+      "file_exts": ["java"],
+      "patterns": [
+        "DocumentBuilderFactory\\.newInstance\\(\\)\\.newDocumentBuilder\\(\\)\\.parse\\s*\\(\\s*request\\.getInputStream",
+        "SAXParserFactory\\.newInstance\\(\\)\\.newSAXParser\\(\\)\\.parse\\s*\\(\\s*request\\.getInputStream",
+        "XMLInputFactory\\.newInstance\\(\\)\\.createXMLStreamReader\\s*\\(\\s*request\\.getInputStream"
+      ]
+    },
+    {
+      "name": "JAVA_REFLEXION_UNSAFE",
+      "vul_type": "REFLECTION",
+      "desc": "Java 中不安全的反射调用",
+      "severity": "High",
+      "file_exts": ["java"],
+      "patterns": [
+        "Class\\.forName\\s*\\(\\s*request\\.getParameter",
+        "ClassLoader\\.loadClass\\s*\\(\\s*request\\.getParameter",
+        "Method\\.invoke\\s*\\(\\s*[^,]+,\\s*request\\.getParameter",
+        "Constructor\\.newInstance\\s*\\(\\s*request\\.getParameter"
+      ]
+    },
+    {
+      "name": "JAVA_DESERIALIZE_UNSAFE",
+      "vul_type": "UNSERIALIZE",
+      "desc": "Java 中不安全的反序列化",
+      "severity": "Critical",
+      "file_exts": ["java"],
+      "patterns": [
+        "ObjectInputStream\\s+\\.\\.\\s*readObject\\s*\\(\\s*request\\.getInputStream",
+        "ObjectInputStream\\s+\\.\\.\\s*readUnshared\\s*\\(\\s*request\\.getInputStream",
+        "Yaml\\.load\\s*\\(\\s*request\\.getInputStream",
+        "JSON\\.parseObject\\s*\\(\\s*request\\.getParameter",
+        "XStream\\.fromXML\\s*\\(\\s*request\\.getParameter"
+      ]
+    },
+    {
+      "name": "JAVA_SSRF_UNSAFE",
+      "vul_type": "SSRF",
+      "desc": "Java 中基于用户输入的 SSRF",
+      "severity": "High",
+      "file_exts": ["java"],
+      "patterns": [
+        "new\\s+URL\\s*\\(\\s*request\\.getParameter",
+        "URLConnection\\s+\\.\\.\\s*connect\\s*\\(\\s*.*request\\.getParameter",
+        "HttpClient\\s+\\.\\.\\s*execute\\s*\\(\\s*.*request\\.getParameter",
+        "RestTemplate\\s+\\.\\.\\s*getForObject\\s*\\(\\s*.*request\\.getParameter",
+        "OkHttpClient\\s+\\.\\.\\s*newCall\\s*\\(\\s*.*request\\.getParameter"
+      ]
+    },
+    {
+      "name": "JAVA_LOG_INJECTION",
+      "vul_type": "LOG_INJECTION",
+      "desc": "Java 中日志注入风险",
+      "severity": "Low",
+      "file_exts": ["java"],
+      "patterns": [
+        "Logger\\.(info|warn|error|debug)\\s*\\(\\s*request\\.getParameter",
+        "log\\.(info|warn|error|debug)\\s*\\(\\s*request\\.getParameter",
+        "LOGGER\\.(info|warn|error|debug)\\s*\\(\\s*request\\.getParameter"
+      ]
+    },
+    {
+      "name": "JAVA_JSP_INCLUDE_UNSAFE",
+      "vul_type": "FILE_INCLUDE",
+      "desc": "Java 中不安全的 JSP 包含",
+      "severity": "High",
+      "file_exts": ["java"],
+      "patterns": [
+        "request\\.getRequestDispatcher\\s*\\(\\s*request\\.getParameter",
+        "getServletContext\\(\\)\\.getRequestDispatcher\\s*\\(\\s*request\\.getParameter",
+        "pageContext\\.include\\s*\\(\\s*request\\.getParameter"
+      ]
+    },
+    {
+      "name": "JAVA_EL_INJECTION",
+      "vul_type": "EL_INJECTION",
+      "desc": "Java 中 EL 表达式注入",
+      "severity": "High",
+      "file_exts": ["java"],
+      "patterns": [
+        "ELProcessor\\.eval\\s*\\(\\s*request\\.getParameter",
+        "ExpressionFactory\\.createValueExpression\\s*\\(\\s*.*request\\.getParameter",
+        "SpelExpressionParser\\.parseExpression\\s*\\(\\s*request\\.getParameter"
+      ]
+    },
+    {
+      "name": "JAVA_ZIP_SLIP",
+      "vul_type": "ZIP_SLIP",
+      "desc": "Java 中 Zip 解压路径穿越",
+      "severity": "High",
+      "file_exts": ["java"],
+      "patterns": [
+        "ZipInputStream\\s+\\.\\.\\s*getNextEntry\\s*\\(\\s*.*\\.getName",
+        "ZipEntry\\s+\\.\\.\\s*getName\\s*\\(\\s*.*\\+\\.\\.\\/",
+        "new\\s+File\\s*\\(\\s*.*zipEntry\\.getName"
+      ]
+    },
+    {
+      "name": "JAVA_CRYPTO_WEAK",
+      "vul_type": "CRYPTO_WEAKNESS",
+      "desc": "Java 中弱加密算法配置",
+      "severity": "Medium",
+      "file_exts": ["java"],
+      "patterns": [
+        "Cipher\\.getInstance\\s*\\(\\s*\"(DES|MD5|SHA1|RC4)\"",
+        "MessageDigest\\.getInstance\\s*\\(\\s*\"(MD5|SHA1)\"",
+        "KeyGenerator\\.getInstance\\s*\\(\\s*\"(DES|Blowfish)\""
+      ]
+    },
+    {
+      "name": "MYBATIS_ANNOTATION_SQLI",
+      "vul_type": "SQLI",
+      "desc": "MyBatis 注解中使用字符串拼接 SQL",
+      "severity": "High",
+      "file_exts": ["java"],
+      "patterns": [
+        "@Select\\s*\\(\\s*\"[^\"]*\\+\\s*request\\.getParameter",
+        "@Update\\s*\\(\\s*\"[^\"]*\\+\\s*request\\.getParameter",
+        "@Delete\\s*\\(\\s*\"[^\"]*\\+\\s*request\\.getParameter",
+        "@Insert\\s*\\(\\s*\"[^\"]*\\+\\s*request\\.getParameter",
+        "@SelectProvider\\s*\\(\\s*[^)]*\\+\\s*request\\.getParameter"
+      ]
+    },
+    {
+      "name": "JDBC_CONCAT_SQLI",
+      "vul_type": "SQLI",
+      "desc": "JDBC 字符串拼接 SQL（Statement.executeQuery/execute）",
+      "severity": "High",
+      "file_exts": ["java", "jsp", "jspx"],
+      "patterns": [
+        "Statement\\.executeQuery\\s*\\(\\s*[^)]*\\+\\s*request\\.getParameter",
+        "Statement\\.execute\\s*\\(\\s*[^)]*\\+\\s*request\\.getParameter",
+        "Statement\\.executeUpdate\\s*\\(\\s*[^)]*\\+\\s*request\\.getParameter",
+        "Connection\\.createStatement\\s*\\(\\s*[^)]*\\)\\.executeQuery\\s*\\(\\s*[^)]*\\+"
+      ]
+    },
+    {
+      "name": "FILE_UPLOAD_UNSAFE",
+      "vul_type": "FILE_WRITE",
+      "desc": "文件上传不安全处理（transferTo/Part.write）",
+      "severity": "High",
+      "file_exts": ["java", "jsp", "jspx"],
+      "patterns": [
+        "MultipartFile\\.transferTo\\s*\\(\\s*[^)]*request\\.getParameter",
+        "Part\\.write\\s*\\(\\s*[^)]*request\\.getParameter",
+        "Files\\.copy\\s*\\(\\s*[^)]*multipartFile\\.getInputStream",
+        "IOUtils\\.copy\\s*\\(\\s*[^)]*multipartFile\\.getInputStream"
+      ]
+    },
+    {
+      "name": "ZIP_SELF_EXTRACT",
+      "vul_type": "ZIP_SLIP",
+      "desc": "ZIP 自解压路径穿越风险",
+      "severity": "High",
+      "file_exts": ["java", "jsp", "jspx"],
+      "patterns": [
+        "ZipInputStream\\s+\\.\\.\\s*getNextEntry",
+        "ZipEntry\\s+\\.\\.\\s*getName\\s*\\(\\s*[^)]*\\)\\s*.*\\.\\.\\/",
+        "new\\s+File\\s*\\(\\s*[^)]*zipEntry\\.getName",
+        "Files\\.copy\\s*\\(\\s*[^)]*zipEntry\\.getName",
+        "getResourceAsStream\\s*\\(\\s*[^)]*zipEntry\\.getName"
+      ]
+    },
+    {
+      "name": "FILE_READ_TRAVERSAL",
+      "vul_type": "PATH_TRAVERSAL",
+      "desc": "文件读取路径穿越",
+      "severity": "High",
+      "file_exts": ["java", "jsp", "jspx"],
+      "patterns": [
+        "new\\s+FileInputStream\\s*\\(\\s*[^)]*request\\.getParameter",
+        "Files\\.readAllBytes\\s*\\(\\s*Paths\\.get\\s*\\(\\s*[^)]*request\\.getParameter",
+        "Files\\.readString\\s*\\(\\s*Paths\\.get\\s*\\(\\s*[^)]*request\\.getParameter",
+        "Files\\.newInputStream\\s*\\(\\s*Paths\\.get\\s*\\(\\s*[^)]*request\\.getParameter",
+        "getResourceAsStream\\s*\\(\\s*[^)]*request\\.getParameter"
+      ]
+    },
+    {
+      "name": "FILE_WRITE_TRAVERSAL",
+      "vul_type": "FILE_WRITE",
+      "desc": "文件写入路径穿越",
+      "severity": "Critical",
+      "file_exts": ["java", "jsp", "jspx"],
+      "patterns": [
+        "new\\s+FileOutputStream\\s*\\(\\s*[^)]*request\\.getParameter",
+        "Files\\.write\\s*\\(\\s*Paths\\.get\\s*\\(\\s*[^)]*request\\.getParameter",
+        "Files\\.writeString\\s*\\(\\s*Paths\\.get\\s*\\(\\s*[^)]*request\\.getParameter",
+        "Files\\.newOutputStream\\s*\\(\\s*Paths\\.get\\s*\\(\\s*[^)]*request\\.getParameter"
+      ]
+    },
+    {
+      "name": "IDOR_HORIZONTAL",
+      "vul_type": "IDOR",
+      "desc": "水平越权：直接使用请求参数作为资源标识符",
+      "severity": "High",
+      "file_exts": ["java", "jsp", "jspx"],
+      "patterns": [
+        "findById\\s*\\(\\s*request\\.getParameter\\s*\\(\\s*\"id\"",
+        "getUser\\s*\\(\\s*request\\.getParameter\\s*\\(\\s*\"userId\"",
+        "selectById\\s*\\(\\s*request\\.getParameter\\s*\\(\\s*\"id\"",
+        "queryById\\s*\\(\\s*request\\.getParameter\\s*\\(\\s*\"id\"",
+        "WHERE\\s+id\\s*=\\s*\\+\\s*request\\.getParameter\\s*\\(\\s*\"id\""
+      ]
+    },
+    {
+      "name": "IDOR_VERTICAL",
+      "vul_type": "IDOR",
+      "desc": "垂直越权：直接使用请求参数作为权限标识符",
+      "severity": "Critical",
+      "file_exts": ["java", "jsp", "jspx"],
+      "patterns": [
+        "setRole\\s*\\(\\s*request\\.getParameter\\s*\\(\\s*\"role\"",
+        "setPermission\\s*\\(\\s*request\\.getParameter\\s*\\(\\s*\"permission\"",
+        "hasRole\\s*\\(\\s*request\\.getParameter\\s*\\(\\s*\"role\"",
+        "isAdmin\\s*\\(\\s*request\\.getParameter\\s*\\(\\s*\"isAdmin\"",
+        "UPDATE\\s+.*role\\s*=\\s*\\+\\s*request\\.getParameter\\s*\\(\\s*\"role\""
+      ]
+    },
+    {
+      "name": "JSP_XSS_OUTPUT",
+      "vul_type": "XSS",
+      "desc": "JSP 中未编码输出用户输入",
+      "severity": "High",
+      "file_exts": ["jsp", "jspx"],
+      "patterns": [
+        "<%\\s*=\\s*request\\.getParameter",
+        "out\\.print\\s*\\(\\s*request\\.getParameter",
+        "out\\.println\\s*\\(\\s*request\\.getParameter",
+        "response\\.getWriter\\(\\)\\.print\\s*\\(\\s*request\\.getParameter"
+      ]
+    },
+    {
+      "name": "JSP_XXE_UNSAFE",
+      "vul_type": "XXE",
+      "desc": "JSP 中不安全的 XML 解析",
+      "severity": "High",
+      "file_exts": ["jsp", "jspx"],
+      "patterns": [
+        "DocumentBuilder\\.parse\\s*\\(\\s*request\\.getInputStream",
+        "SAXParser\\.parse\\s*\\(\\s*request\\.getInputStream",
+        "XMLInputFactory\\.createXMLStreamReader\\s*\\(\\s*request\\.getInputStream"
+      ]
+    },
+    {
+      "name": "JSP_CSRF_MISSING",
+      "vul_type": "CSRF",
+      "desc": "JSP 表单缺少 CSRF 令牌",
+      "severity": "Medium",
+      "file_exts": ["jsp", "jspx"],
+      "patterns": [
+        "<form[^>]*method=\\\"post\\\"[^>]*>(?![\\s\\S]*csrf)(?![\\s\\S]*_token)"
+      ]
+    },
+    {
+      "name": "JSP_SSRF_UNSAFE",
+      "vul_type": "SSRF",
+      "desc": "JSP 中基于用户输入的 SSRF",
+      "severity": "High",
+      "file_exts": ["jsp", "jspx"],
+      "patterns": [
+        "new\\s+URL\\s*\\(\\s*request\\.getParameter",
+        "URLConnection\\s+\\.\\.\\s*connect\\s*\\(\\s*.*request\\.getParameter",
+        "HttpURLConnection\\s+\\.\\.\\s*connect\\s*\\(\\s*.*request\\.getParameter"
+      ]
+    },
+    {
+      "name": "JWT_HARDCODED_SECRET",
+      "vul_type": "HARDCODED_SECRET",
+      "desc": "JWT 密钥硬编码",
+      "severity": "High",
+      "file_exts": ["java", "jsp", "jspx"],
+      "patterns": [
+        "Jwts\\.parser\\(\\)\\.setSigningKey\\s*\\(\\s*\"[^\"]{1,16}\"",
+        "signWith\\s*\\(\\s*SignatureAlgorithm\\.HS256\\s*,\\s*\"[^\"]{1,32}\"",
+        "JWT\\.require\\s*\\(\\s*Algorithm\\.HMAC256\\s*\\(\\s*\"[^\"]{1,32}\""
+      ]
+    },
+    {
+      "name": "PASSWORD_HARDCODED",
+      "vul_type": "HARDCODED_SECRET",
+      "desc": "密码硬编码",
+      "severity": "High",
+      "file_exts": ["java", "jsp", "jspx", "properties", "yml", "yaml"],
+      "patterns": [
+        "password\\s*=\\s*\"[^\"]+\"",
+        "password\\s*:\\s*\"[^\"]+\"",
+        "pwd\\s*=\\s*\"[^\"]+\"",
+        "passwd\\s*=\\s*\"[^\"]+\"",
+        "String\\s+password\\s*=\\s*\"[^\"]+\""
+      ]
+    },
+    {
+      "name": "API_KEY_HARDCODED",
+      "vul_type": "HARDCODED_SECRET",
+      "desc": "API密钥硬编码",
+      "severity": "High",
+      "file_exts": ["java", "jsp", "jspx", "properties"],
+      "patterns": [
+        "api[_-]?key\\s*=\\s*\"[^\"]+\"",
+        "apikey\\s*=\\s*\"[^\"]+\"",
+        "secret[_-]?key\\s*=\\s*\"[^\"]+\"",
+        "SECRET_KEY\\s*=\\s*\"[^\"]+\""
+      ]
+    },
+    {
+      "name": "LOG4J2_PATTERN_INJECTION",
+      "vul_type": "LOG_INJECTION",
+      "desc": "Log4j2 模式注入（JNDI查找）",
+      "severity": "Critical",
+      "file_exts": ["java", "xml", "properties"],
+      "patterns": [
+        "\\$\\{jndi:",
+        "\\$\\{ctx:",
+        "\\$\\{sys:",
+        "\\$\\{env:",
+        "\\$\\{java:",
+        "\\$\\{lower:",
+        "\\$\\{upper:"
+      ]
+    },
+    {
+      "name": "SPRING_SECURITY_CSRF_DISABLED",
+      "vul_type": "CSRF",
+      "desc": "Spring Security CSRF 保护被禁用",
+      "severity": "High",
+      "file_exts": ["java"],
+      "patterns": [
+        "http\\.csrf\\(\\)\\.disable",
+        "csrf\\(\\)\\.disable",
+        "setCsrfDisabled\\s*\\(\\s*true"
+      ]
+    },
+    {
+      "name": "CORS_WILDCARD_ORIGIN",
+      "vul_type": "CORS_MISCONFIG",
+      "desc": "CORS 配置允许所有来源（*）",
+      "severity": "Medium",
+      "file_exts": ["java", "jsp", "jspx"],
+      "patterns": [
+        "setAllowedOrigins\\s*\\(\\s*\"\\*\"",
+        "allowedOrigins\\s*\\(\\s*\"\\*\"",
+        "Access-Control-Allow-Origin\\s*:\\s*\\*"
+      ]
+    },
+    {
+      "name": "SENSITIVE_DATA_IN_LOG",
+      "vul_type": "SENSITIVE_INFO_LEAK",
+      "desc": "日志中包含敏感数据",
+      "severity": "Medium",
+      "file_exts": ["java", "jsp", "jspx"],
+      "patterns": [
+        "logger\\.(info|debug|warn|error)\\s*\\(\\s*.*password",
+        "log\\.(info|debug|warn|error)\\s*\\(\\s*.*password",
+        "LOGGER\\.(info|debug|warn|error)\\s*\\(\\s*.*password",
+        "System\\.out\\.println\\s*\\(\\s*.*password",
+        "printStackTrace"
+      ]
+    },
+    {
+      "name": "SQL_INJECTION_MYBATIS_DOLLAR",
+      "vul_type": "SQLI",
+      "desc": "MyBatis 使用 ${} 导致SQL注入",
+      "severity": "High",
+      "file_exts": ["xml", "java"],
+      "patterns": [
+        "\\$\\{[^}]+WHERE",
+        "\\$\\{[^}]+ORDER\\s+BY",
+        "\\$\\{[^}]+LIMIT",
+        "\\$\\{[^}]+UNION",
+        "<select[^>]*>.*\\$\\{[^}]+",
+        "@Select\\s*\\(\\s*\"[^\"]*\\$\\{[^}]+"
+      ]
+    },
+    {
+      "name": "JDBC_STATEMENT_CONCAT",
+      "vul_type": "SQLI",
+      "desc": "JDBC Statement.executeQuery/execute 字符串拼接SQL",
+      "severity": "Critical",
+      "file_exts": ["java", "jsp", "jspx"],
+      "patterns": [
+        "Statement\\.executeQuery\\s*\\(\\s*[\"'][^\"']*\\+.*request\\.getParameter",
+        "Statement\\.execute\\s*\\(\\s*[\"'][^\"']*\\+.*request\\.getParameter",
+        "Statement\\.executeUpdate\\s*\\(\\s*[\"'][^\"']*\\+.*request\\.getParameter",
+        "createStatement\\(\\)\\.executeQuery\\s*\\(\\s*[\"'][^\"']*\\+.*request",
+        "Connection\\.createStatement\\s*\\(\\s*[^)]*\\)\\.executeQuery\\s*\\(\\s*[\"'][^\"']*\\+",
+        "String\\s+sql\\s*=\\s*[\"']SELECT.*\\+.*request\\.getParameter.*executeQuery",
+        "String\\s+sql\\s*=\\s*[\"']UPDATE.*\\+.*request\\.getParameter.*executeUpdate",
+        "String\\s+sql\\s*=\\s*[\"']DELETE.*\\+.*request\\.getParameter.*execute",
+        "StringBuilder.*append.*request\\.getParameter.*toString.*executeQuery",
+        "StringBuffer.*append.*request\\.getParameter.*toString.*executeQuery"
+      ],
+      "must_substrings": ["executeQuery", "execute", "executeUpdate", "Statement"],
+      "exclude_substrings": ["PreparedStatement", "setString", "setInt", "setParameter"]
+    },
+    {
+      "name": "JDBC_PREPAREDSTATEMENT_CONCAT",
+      "vul_type": "SQLI",
+      "desc": "JDBC PreparedStatement 构造SQL时字符串拼接",
+      "severity": "High",
+      "file_exts": ["java", "jsp", "jspx"],
+      "patterns": [
+        "prepareStatement\\s*\\(\\s*[\"'][^\"']*\\+.*request\\.getParameter",
+        "prepareStatement\\s*\\(\\s*[\"'][^\"']*\\+.*request\\.getHeader",
+        "PreparedStatement.*=.*prepareStatement\\s*\\(\\s*[\"'].*\\+.*request",
+        "String\\s+sql\\s*=\\s*[\"'].*\\+.*request\\.getParameter.*prepareStatement"
+      ],
+      "must_substrings": ["prepareStatement", "request.getParameter"],
+      "exclude_substrings": ["setString", "setInt", "setParameter", "setObject"]
+    },
+    {
+      "name": "JDBC_CONNECTION_NATIVE_SQL",
+      "vul_type": "SQLI",
+      "desc": "JDBC Connection.nativeSQL 使用用户输入",
+      "severity": "High",
+      "file_exts": ["java", "jsp", "jspx"],
+      "patterns": [
+        "Connection\\.nativeSQL\\s*\\(\\s*.*request\\.getParameter",
+        "connection\\.nativeSQL\\s*\\(\\s*.*request\\.getParameter",
+        "nativeSQL\\s*\\(\\s*[\"'].*\\+.*request\\.getParameter"
+      ],
+      "must_substrings": ["nativeSQL", "request.getParameter"]
+    },
+    {
+      "name": "JDBC_CALLABLESTATEMENT_CONCAT",
+      "vul_type": "SQLI",
+      "desc": "JDBC CallableStatement 存储过程调用时字符串拼接",
+      "severity": "High",
+      "file_exts": ["java", "jsp", "jspx"],
+      "patterns": [
+        "prepareCall\\s*\\(\\s*[\"']\\s*CALL.*\\+.*request\\.getParameter",
+        "prepareCall\\s*\\(\\s*[\"']\\s*\\{.*call.*\\+.*request\\.getParameter",
+        "CallableStatement.*=.*prepareCall\\s*\\(\\s*[\"'].*\\+.*request"
+      ],
+      "must_substrings": ["prepareCall", "CALL", "request.getParameter"],
+      "exclude_substrings": ["setString", "setInt", "setParameter"]
+    },
+    {
+      "name": "SPRING_JDBC_TEMPLATE_CONCAT",
+      "vul_type": "SQLI",
+      "desc": "Spring JdbcTemplate query/update 使用字符串拼接SQL",
+      "severity": "High",
+      "file_exts": ["java"],
+      "patterns": [
+        "jdbcTemplate\\.query\\s*\\(\\s*[\"'][^\"']*\\+.*request\\.getParameter",
+        "jdbcTemplate\\.queryForObject\\s*\\(\\s*[\"'][^\"']*\\+.*request\\.getParameter",
+        "jdbcTemplate\\.queryForList\\s*\\(\\s*[\"'][^\"']*\\+.*request\\.getParameter",
+        "jdbcTemplate\\.update\\s*\\(\\s*[\"'][^\"']*\\+.*request\\.getParameter",
+        "jdbcTemplate\\.execute\\s*\\(\\s*[\"'][^\"']*\\+.*request\\.getParameter",
+        "JdbcTemplate.*query\\s*\\(\\s*[\"'].*\\+.*request\\.getParameter",
+        "namedParameterJdbcTemplate\\.query\\s*\\(\\s*[\"'][^\"']*\\+.*request\\.getParameter"
+      ],
+      "must_substrings": ["jdbcTemplate", "query", "update", "execute", "request.getParameter"],
+      "exclude_substrings": ["Object[]", "args", "prepareStatement"]
+    },
+    {
+      "name": "MYBATIS_XML_DOLLAR_INJECTION",
+      "vul_type": "SQLI",
+      "desc": "MyBatis XML映射文件中使用 ${} 占位符",
+      "severity": "High",
+      "file_exts": ["xml"],
+      "patterns": [
+        "<select[^>]*>.*\\$\\{[^}]+",
+        "<insert[^>]*>.*\\$\\{[^}]+",
+        "<update[^>]*>.*\\$\\{[^}]+",
+        "<delete[^>]*>.*\\$\\{[^}]+",
+        "<if[^>]*test=\\\"[^\\\"]*\\$\\{[^}]+",
+        "<where[^>]*>.*\\$\\{[^}]+",
+        "<set[^>]*>.*\\$\\{[^}]+",
+        "<trim[^>]*>.*\\$\\{[^}]+",
+        "<foreach[^>]*>.*\\$\\{[^}]+",
+        "SELECT.*\\$\\{[^}]+.*FROM",
+        "UPDATE.*SET.*\\$\\{[^}]+",
+        "INSERT.*VALUES.*\\$\\{[^}]+",
+        "DELETE.*FROM.*WHERE.*\\$\\{[^}]+",
+        "ORDER\\s+BY\\s+\\$\\{[^}]+",
+        "GROUP\\s+BY\\s+\\$\\{[^}]+",
+        "LIMIT\\s+\\$\\{[^}]+"
+      ],
+      "must_substrings": ["${"],
+      "exclude_substrings": ["#{", "\\$\\{[^}]*id[^}]*}", "\\$\\{[^}]*tableName[^}]*}"]
+    },
+    {
+      "name": "MYBATIS_DYNAMIC_SQL_INJECTION",
+      "vul_type": "SQLI",
+      "desc": "MyBatis 动态SQL中使用字符串拼接",
+      "severity": "High",
+      "file_exts": ["xml", "java"],
+      "patterns": [
+        "<if[^>]*test=\\\"[^\\\"]*\\+.*request",
+        "<foreach[^>]*collection=\\\"[^\\\"]*\\+.*request",
+        "<choose>.*<when[^>]*test=\\\"[^\\\"]*\\+.*request",
+        "<where>.*\\+.*request\\.getParameter",
+        "<set>.*\\+.*request\\.getParameter",
+        "org\\.apache\\.ibatis\\.jdbc\\.SQL.*SELECT.*\\+.*request",
+        "org\\.apache\\.ibatis\\.jdbc\\.SQL.*UPDATE.*\\+.*request",
+        "org\\.apache\\.ibatis\\.jdbc\\.SQL.*INSERT.*\\+.*request",
+        "org\\.apache\\.ibatis\\.jdbc\\.SQL.*DELETE.*\\+.*request"
+      ],
+      "must_substrings": ["<if", "<foreach", "<where", "<set", "request.getParameter"],
+      "exclude_substrings": ["#{", "parameterType"]
+    },
+    {
+      "name": "MYBATIS_SQL_BUILDER_INJECTION",
+      "vul_type": "SQLI",
+      "desc": "MyBatis SQL Builder API 使用字符串拼接",
+      "severity": "High",
+      "file_exts": ["java"],
+      "patterns": [
+        "SQL\\.SELECT.*\\+.*request\\.getParameter",
+        "SQL\\.UPDATE.*\\+.*request\\.getParameter",
+        "SQL\\.INSERT.*\\+.*request\\.getParameter",
+        "SQL\\.DELETE.*\\+.*request\\.getParameter",
+        "new\\s+SQL\\(\\).*SELECT.*\\+.*request",
+        "sql\\.SELECT.*\\+.*request\\.getParameter",
+        "sql\\.UPDATE.*\\+.*request\\.getParameter",
+        "sql\\.toString\\(\\).*\\+.*request"
+      ],
+      "must_substrings": ["SQL.SELECT", "SQL.UPDATE", "SQL.INSERT", "SQL.DELETE", "request.getParameter"],
+      "exclude_substrings": ["VALUES", "INTO"]
+    },
+    {
+      "name": "MYBATIS_PROVIDER_SQLI",
+      "vul_type": "SQLI",
+      "desc": "MyBatis Provider 类中使用字符串拼接SQL",
+      "severity": "High",
+      "file_exts": ["java"],
+      "patterns": [
+        "@SelectProvider.*method.*request\\.getParameter",
+        "@UpdateProvider.*method.*request\\.getParameter",
+        "@InsertProvider.*method.*request\\.getParameter",
+        "@DeleteProvider.*method.*request\\.getParameter",
+        "public\\s+String\\s+.*Provider.*\\(.*\\).*\\{.*return.*\\+.*request\\.getParameter"
+      ],
+      "must_substrings": ["@SelectProvider", "@UpdateProvider", "@InsertProvider", "@DeleteProvider", "request.getParameter"],
+      "exclude_substrings": ["#{", "setParameter"]
+    },
+    {
+      "name": "MYBATIS_INTERCEPTOR_SQLI",
+      "vul_type": "SQLI",
+      "desc": "MyBatis Interceptor 中修改SQL时字符串拼接",
+      "severity": "High",
+      "file_exts": ["java"],
+      "patterns": [
+        "intercept\\s*\\(.*Invocation.*\\).*\\{.*sql.*\\+.*request",
+        "Interceptor.*intercept.*sql.*\\+.*request\\.getParameter",
+        "BoundSql.*getSql\\(\\).*\\+.*request\\.getParameter"
+      ],
+      "must_substrings": ["Interceptor", "intercept", "sql", "request.getParameter"]
+    },
+    {
+      "name": "HIBERNATE_QUERY_CONCAT",
+      "vul_type": "SQLI",
+      "desc": "Hibernate createQuery/createSQLQuery 使用字符串拼接",
+      "severity": "High",
+      "file_exts": ["java"],
+      "patterns": [
+        "session\\.createQuery\\s*\\(\\s*[\"'][^\"']*\\+.*request\\.getParameter",
+        "session\\.createSQLQuery\\s*\\(\\s*[\"'][^\"']*\\+.*request\\.getParameter",
+        "session\\.createNativeQuery\\s*\\(\\s*[\"'][^\"']*\\+.*request\\.getParameter",
+        "entityManager\\.createQuery\\s*\\(\\s*[\"'][^\"']*\\+.*request\\.getParameter",
+        "entityManager\\.createNativeQuery\\s*\\(\\s*[\"'][^\"']*\\+.*request\\.getParameter",
+        "Session\\.createQuery\\s*\\(\\s*[\"'].*\\+.*request",
+        "Session\\.createSQLQuery\\s*\\(\\s*[\"'].*\\+.*request"
+      ],
+      "must_substrings": ["createQuery", "createSQLQuery", "createNativeQuery", "request.getParameter"],
+      "exclude_substrings": ["setParameter", "setString", "setInteger", "Parameter"]
+    },
+    {
+      "name": "JPA_QUERY_CONCAT",
+      "vul_type": "SQLI",
+      "desc": "JPA EntityManager.createQuery/createNativeQuery 字符串拼接",
+      "severity": "High",
+      "file_exts": ["java"],
+      "patterns": [
+        "entityManager\\.createQuery\\s*\\(\\s*[\"']SELECT.*\\+.*request\\.getParameter",
+        "entityManager\\.createNativeQuery\\s*\\(\\s*[\"']SELECT.*\\+.*request\\.getParameter",
+        "EntityManager\\.createQuery\\s*\\(\\s*[\"'].*\\+.*request",
+        "@Query\\s*\\(\\s*value\\s*=\\s*[\"'][^\"']*\\+.*request",
+        "@Query\\s*\\(\\s*[\"'][^\"']*\\+.*request\\.getParameter"
+      ],
+      "must_substrings": ["createQuery", "createNativeQuery", "@Query", "request.getParameter"],
+      "exclude_substrings": ["?1", "?2", ":param", "setParameter"]
+    },
+    {
+      "name": "FILE_UPLOAD_PATH_TRAVERSAL",
+      "vul_type": "FILE_WRITE",
+      "desc": "文件上传路径遍历漏洞（使用用户输入构造路径）",
+      "severity": "Critical",
+      "file_exts": ["java", "jsp", "jspx"],
+      "patterns": [
+        "MultipartFile\\.transferTo\\s*\\(\\s*new\\s+File\\s*\\(\\s*.*request\\.getParameter",
+        "Part\\.write\\s*\\(\\s*.*request\\.getParameter\\s*\\(\\s*[\"']path[\"']",
+        "Files\\.copy\\s*\\(\\s*.*multipartFile\\.getInputStream\\s*\\(\\s*\\).*Paths\\.get\\s*\\(\\s*.*request\\.getParameter",
+        "FileOutputStream\\s*\\(\\s*new\\s+File\\s*\\(\\s*.*request\\.getParameter",
+        "multipartFile\\.transferTo\\s*\\(\\s*Paths\\.get\\s*\\(\\s*.*request\\.getParameter",
+        "part\\.write\\s*\\(\\s*.*request\\.getParameter\\s*\\(\\s*[\"']filename[\"']",
+        "file\\.transferTo\\s*\\(\\s*new\\s+File\\s*\\(\\s*.*\\.\\./",
+        "file\\.transferTo\\s*\\(\\s*new\\s+File\\s*\\(\\s*.*\\.\\.\\\\"
+      ],
+      "must_substrings": ["transferTo", "Part.write", "Files.copy", "request.getParameter"],
+      "exclude_substrings": ["getCanonicalPath", "normalize", "Path.normalize", "sanitize"]
+    },
+    {
+      "name": "FILE_UPLOAD_FILENAME_INJECTION",
+      "vul_type": "FILE_WRITE",
+      "desc": "文件上传未验证文件名，可能导致路径注入或覆盖",
+      "severity": "High",
+      "file_exts": ["java", "jsp", "jspx"],
+      "patterns": [
+        "multipartFile\\.transferTo\\s*\\(\\s*new\\s+File\\s*\\(\\s*.*multipartFile\\.getOriginalFilename",
+        "part\\.write\\s*\\(\\s*.*part\\.getSubmittedFileName",
+        "part\\.write\\s*\\(\\s*.*part\\.getName",
+        "Files\\.copy\\s*\\(\\s*.*multipartFile\\.getInputStream.*Paths\\.get\\s*\\(\\s*.*multipartFile\\.getOriginalFilename",
+        "FileOutputStream\\s*\\(\\s*new\\s+File\\s*\\(\\s*.*multipartFile\\.getOriginalFilename",
+        "multipartFile\\.transferTo\\s*\\(\\s*Paths\\.get\\s*\\(\\s*.*multipartFile\\.getOriginalFilename"
+      ],
+      "must_substrings": ["getOriginalFilename", "getSubmittedFileName", "getName", "transferTo", "write"],
+      "exclude_substrings": ["endsWith", "replaceAll", "sanitize", "validate", "getCanonicalPath", "normalize", "path\\.replace", "filename\\.replace"]
+    },
+    {
+      "name": "FILE_UPLOAD_NO_TYPE_CHECK",
+      "vul_type": "FILE_WRITE",
+      "desc": "文件上传未校验文件类型和扩展名",
+      "severity": "High",
+      "file_exts": ["java", "jsp", "jspx"],
+      "patterns": [
+        "MultipartFile\\.transferTo\\s*\\(\\s*[^)]*\\)",
+        "Part\\.write\\s*\\(\\s*[^)]*\\)",
+        "Files\\.copy\\s*\\(\\s*.*multipartFile\\.getInputStream",
+        "IOUtils\\.copy\\s*\\(\\s*.*multipartFile\\.getInputStream"
+      ],
+      "must_substrings": ["transferTo", "Part.write", "Files.copy", "multipartFile"],
+      "exclude_substrings": ["getContentType", "endsWith", "getOriginalFilename.*endsWith", "getOriginalFilename.*\\.(jpg|jpeg|png|gif|pdf)", "validateExtension", "allowedExtensions", "whiteList", "blackList"]
+    },
+    {
+      "name": "FILE_UPLOAD_NO_SIZE_LIMIT",
+      "vul_type": "FILE_WRITE",
+      "desc": "文件上传未限制文件大小，可能导致DoS",
+      "severity": "Medium",
+      "file_exts": ["java", "jsp", "jspx"],
+      "patterns": [
+        "MultipartFile\\.transferTo\\s*\\(\\s*[^)]*\\)",
+        "Part\\.write\\s*\\(\\s*[^)]*\\)",
+        "multipartFile\\.getBytes\\(\\s*\\).*write"
+      ],
+      "must_substrings": ["transferTo", "Part.write", "getBytes", "multipartFile"],
+      "exclude_substrings": ["getSize", "MAX_SIZE", "MAX_FILE_SIZE", "size.*<", "size.*>", "multipartFile\\.getSize\\(\\s*\\)", "maxRequestSize", "maxFileSize"]
+    },
+    {
+      "name": "FILE_UPLOAD_JSP_SCRIPT_UPLOAD",
+      "vul_type": "FILE_WRITE",
+      "desc": "允许上传JSP/JSPX脚本文件，可能导致代码执行",
+      "severity": "Critical",
+      "file_exts": ["java", "jsp", "jspx"],
+      "patterns": [
+        "multipartFile\\.transferTo.*\\.(jsp|jspx|jspf)",
+        "part\\.write.*\\.(jsp|jspx|jspf)",
+        "getOriginalFilename.*\\.(jsp|jspx|jspf).*transferTo",
+        "getSubmittedFileName.*\\.(jsp|jspx|jspf).*write"
+      ],
+      "must_substrings": ["transferTo", "write", "jsp", "jspx"],
+      "exclude_substrings": ["endsWith.*\\.(jsp|jspx).*false", "endsWith.*\\.(jsp|jspx).*reject", "validate.*\\.(jsp|jspx).*false"]
+    },
+    {
+      "name": "FILE_UPLOAD_DANGEROUS_EXTENSION",
+      "vul_type": "FILE_WRITE",
+      "desc": "文件上传允许危险扩展名（.sh, .bat, .exe, .jar等）",
+      "severity": "High",
+      "file_exts": ["java", "jsp", "jspx"],
+      "patterns": [
+        "multipartFile\\.transferTo.*\\.(sh|bat|exe|jar|war|ear|class|cmd|com|pif|scr|vbs|js)",
+        "part\\.write.*\\.(sh|bat|exe|jar|war|ear|class|cmd|com|pif|scr|vbs|js)",
+        "getOriginalFilename.*\\.(sh|bat|exe|jar|war|ear|class|cmd|com|pif|scr|vbs|js).*transferTo"
+      ],
+      "must_substrings": ["transferTo", "write", "getOriginalFilename"],
+      "exclude_substrings": ["endsWith.*\\.(sh|bat|exe|jar).*false", "reject.*\\.(sh|bat|exe|jar)", "validate.*\\.(sh|bat|exe|jar).*false"]
+    },
+    {
+      "name": "FILE_UPLOAD_DOUBLE_EXTENSION",
+      "vul_type": "FILE_WRITE",
+      "desc": "文件上传可能受到双扩展名绕过（如 file.jsp.txt）",
+      "severity": "High",
+      "file_exts": ["java", "jsp", "jspx"],
+      "patterns": [
+        "multipartFile\\.getOriginalFilename\\(\\s*\\)\\.endsWith\\s*\\(\\s*[\"']\\.(jpg|jpeg|png|gif)[\"']",
+        "part\\.getSubmittedFileName\\(\\s*\\)\\.endsWith\\s*\\(\\s*[\"']\\.(jpg|jpeg|png|gif)[\"']",
+        "filename\\.endsWith\\s*\\(\\s*[\"']\\.(jpg|jpeg|png|gif)[\"']"
+      ],
+      "must_substrings": ["getOriginalFilename", "getSubmittedFileName", "endsWith"],
+      "exclude_substrings": ["lastIndexOf", "substring", "split", "replaceAll", "\\.[^.]*$"]
+    },
+    {
+      "name": "FILE_UPLOAD_CONTENT_TYPE_BYPASS",
+      "vul_type": "FILE_WRITE",
+      "desc": "文件上传仅校验Content-Type，可能被绕过",
+      "severity": "Medium",
+      "file_exts": ["java", "jsp", "jspx"],
+      "patterns": [
+        "multipartFile\\.getContentType\\(\\s*\\)\\.equals\\s*\\(\\s*[\"']image",
+        "part\\.getContentType\\(\\s*\\)\\.equals\\s*\\(\\s*[\"']image",
+        "getContentType.*contains\\s*\\(\\s*[\"']image"
+      ],
+      "must_substrings": ["getContentType", "equals", "contains"],
+      "exclude_substrings": ["getOriginalFilename", "endsWith", "MagicNumber", "fileSignature", "ImageIO.read"]
+    },
+    {
+      "name": "FILE_UPLOAD_ZIPSLIP",
+      "vul_type": "ZIP_SLIP",
+      "desc": "文件上传解压ZIP时未校验路径，存在ZipSlip漏洞",
+      "severity": "Critical",
+      "file_exts": ["java", "jsp", "jspx"],
+      "patterns": [
+        "ZipInputStream.*getNextEntry.*getName.*File",
+        "ZipFile.*getEntry.*getName.*File",
+        "ZipEntry.*getName.*\\.\\./.*File",
+        "zipEntry\\.getName.*new\\s+File",
+        "entry\\.getName.*Files\\.copy",
+        "zipEntry\\.getName.*transferTo"
+      ],
+      "must_substrings": ["ZipInputStream", "ZipFile", "ZipEntry", "getName", "File"],
+      "exclude_substrings": ["getCanonicalPath", "normalize", "Path.normalize", "canonicalize", "startsWith.*parentPath"]
+    },
+    {
+      "name": "PATH_TRAVERSAL_NIO",
+      "vul_type": "PATH_TRAVERSAL",
+      "desc": "NIO Paths 路径遍历",
+      "severity": "High",
+      "file_exts": ["java", "jsp", "jspx"],
+      "patterns": [
+        "Paths\\.get\\s*\\(\\s*.*\\.\\./",
+        "Paths\\.get\\s*\\(\\s*.*\\.\\.\\\\",
+        "Files\\.(read|write|copy|delete|move)\\s*\\(\\s*Paths\\.get\\s*\\(\\s*.*request\\.getParameter"
+      ]
+    },
+    {
+      "name": "XXE_DOCUMENTBUILDER_UNSAFE",
+      "vul_type": "XXE",
+      "desc": "DocumentBuilder 未禁用外部实体",
+      "severity": "High",
+      "file_exts": ["java", "jsp", "jspx"],
+      "patterns": [
+        "DocumentBuilderFactory\\.newInstance\\(\\)\\.newDocumentBuilder\\(\\)\\.parse",
+        "SAXParserFactory\\.newInstance\\(\\)\\.newSAXParser\\(\\)\\.parse",
+        "XMLInputFactory\\.newInstance\\(\\)\\.createXMLStreamReader"
+      ],
+      "must_substrings": ["request.getInputStream", "request.getParameter"],
+      "exclude_substrings": ["setFeature", "FEATURE_SECURE_PROCESSING", "XMLConstants"]
+    },
+    {
+      "name": "INSECURE_SSL_CONTEXT",
+      "vul_type": "CRYPTO_WEAKNESS",
+      "desc": "不安全的SSL/TLS配置",
+      "severity": "High",
+      "file_exts": ["java", "jsp", "jspx"],
+      "patterns": [
+        "SSLContext\\.getInstance\\s*\\(\\s*\"(SSL|TLS)\"",
+        "TrustManager\\[\\]\\s+.*\\{\\s*\\}",
+        "setHostnameVerifier\\s*\\(\\s*\\[^)]*\\btrue\\b",
+        "setDefaultHostnameVerifier\\s*\\(\\s*\\[^)]*\\btrue\\b"
+      ]
+    },
+    {
+      "name": "FILE_UPLOAD_NO_VALIDATION",
+      "vul_type": "FILE_WRITE",
+      "desc": "文件上传未校验扩展名或大小",
+      "severity": "High",
+      "file_exts": ["java", "jsp", "jspx"],
+      "patterns": [
+        "MultipartFile\\.transferTo\\s*\\(\\s*[^)]*\\)",
+        "Part\\.write\\s*\\(\\s*[^)]*\\)",
+        "Files\\.copy\\s*\\(\\s*.*multipartFile\\.getInputStream"
+      ],
+      "exclude_substrings": ["getOriginalFilename", "endsWith", "getSize", "MAX_SIZE"]
+    },
+    {
+      "name": "RATE_LIMIT_MISSING",
+      "vul_type": "SECURITY_MISCONFIG",
+      "desc": "缺少速率限制保护",
+      "severity": "Medium",
+      "file_exts": ["java"],
+      "patterns": [
+        "@PostMapping|@GetMapping|@RequestMapping",
+        "@RestController|@Controller"
+      ],
+      "exclude_substrings": ["RateLimiter", "@RateLimit", "rateLimit", "throttle"]
+    },
+    {
+      "name": "JSP_XSS_JSTL_UNESCAPED",
+      "vul_type": "XSS",
+      "desc": "JSTL c:out 未设置 escapeXml",
+      "severity": "High",
+      "file_exts": ["jsp", "jspx"],
+      "patterns": [
+        "<c:out\\s+value=\\\"[^\\\"]*\\\"",
+        "<c:out\\s+value=\\'[^\\']*\\'"
+      ],
+      "exclude_substrings": ["escapeXml=\"true\"", "escapeXml='true'"]
+    },
+    {
+      "name": "JSP_SQLI_DIRECT_QUERY",
+      "vul_type": "SQLI",
+      "desc": "JSP 中直接执行SQL查询",
+      "severity": "Critical",
+      "file_exts": ["jsp", "jspx"],
+      "patterns": [
+        "connection\\.createStatement\\(\\)\\.executeQuery",
+        "connection\\.createStatement\\(\\)\\.execute",
+        "statement\\.executeQuery\\s*\\(\\s*[^)]*\\+\\s*request"
+      ]
+    },
+    {
+      "name": "FREEMARKER_XSS_UNSAFE_DIRECTIVE",
+      "vul_type": "XSS",
+      "desc": "FreeMarker 使用不安全指令输出",
+      "severity": "High",
+      "file_exts": ["ftl"],
+      "patterns": [
+        "<#outputformat\\s+\\\"XHTML\\\"|\\\"HTML\\\"",
+        "<@.*\\s+>",
+        "\\$\\{[^}]+\\}(?!\\?html)(?!\\?xhtml)(?!\\?js_string)"
+      ],
+      "must_substrings": ["${"],
+      "exclude_substrings": ["?html", "?xhtml", "?js_string", "?esc"]
+    },
+    {
+      "name": "VELOCITY_XSS_UNSAFE_OUTPUT",
+      "vul_type": "XSS",
+      "desc": "Velocity 使用不安全输出方式",
+      "severity": "High",
+      "file_exts": ["vm"],
+      "patterns": [
+        "\\$\\{[^}]+\\}",
+        "\\$[a-zA-Z_][\\w\\.]*",
+        "\\$!\\{[^}]+\\}"
+      ],
+      "exclude_substrings": ["$esc", "$tool.escapeHtml", "$!esc"]
+    },
+    {
+      "name": "THYMELEAF_XSS_UNSAFE_ATTR",
+      "vul_type": "XSS",
+      "desc": "Thymeleaf 使用不安全属性绑定",
+      "severity": "High",
+      "file_exts": ["html", "xhtml"],
+      "patterns": [
+        "th:attr\\s*=\\s*\\\"[^\\\"]*\\$\\{",
+        "th:onclick\\s*=\\s*\\\"[^\\\"]*\\$\\{",
+        "th:onerror\\s*=\\s*\\\"[^\\\"]*\\$\\{",
+        "onclick\\s*=\\s*\\\"[^\\\"]*\\$\\{[^}]+\\}"
+      ]
+    },
+    {
+      "name": "MUSTACHE_XSS_UNSAFE",
+      "vul_type": "XSS",
+      "desc": "Mustache 模板未转义输出",
+      "severity": "Medium",
+      "file_exts": ["mustache", "mst"],
+      "patterns": [
+        "\\{\\{[^}]+\\}\\}",
+        "\\{\\{&\\s+[^}]+\\}\\}"
+      ],
+      "exclude_substrings": ["{{{{", "&", "esc"]
+    },
+    {
+      "name": "JSP_DYNAMIC_INCLUDE_UNSAFE",
+      "vul_type": "FILE_INCLUDE",
+      "desc": "JSP 动态包含未校验",
+      "severity": "High",
+      "file_exts": ["jsp", "jspx"],
+      "patterns": [
+        "<jsp:include\\s+page\\s*=\\s*\\\"\\s*\\$\\{",
+        "<jsp:forward\\s+page\\s*=\\s*\\\"\\s*\\$\\{",
+        "request\\.getRequestDispatcher\\s*\\(\\s*request\\.getParameter"
+      ]
+    },
+    {
+      "name": "SQL_CONCAT_IN_TEMPLATE",
+      "vul_type": "SQLI",
+      "desc": "模板中SQL字符串拼接",
+      "severity": "High",
+      "file_exts": ["jsp", "jspx", "ftl", "vm", "java"],
+      "patterns": [
+        "SELECT\\s+.*\\+\\s*\\$\\{",
+        "INSERT\\s+.*\\+\\s*\\$\\{",
+        "UPDATE\\s+.*\\+\\s*\\$\\{",
+        "DELETE\\s+.*\\+\\s*\\$\\{",
+        "WHERE\\s+.*\\+\\s*\\$\\{",
+        "ORDER\\s+BY\\s+.*\\+\\s*\\$\\{"
+      ],
+      "must_substrings": ["${", "request.getParameter"]
+    },
+    {
+      "name": "JSP_COOKIE_SECURE_MISSING",
+      "vul_type": "SECURITY_MISCONFIG",
+      "desc": "Cookie 未设置 Secure 标志",
+      "severity": "Medium",
+      "file_exts": ["jsp", "jspx", "java"],
+      "patterns": [
+        "new\\s+Cookie\\s*\\(",
+        "response\\.addCookie\\s*\\(",
+        "Cookie\\s+.*\\s*=\\s*new\\s+Cookie"
+      ],
+      "exclude_substrings": ["setSecure(true", "setSecure(true)", "setHttpOnly(true"]
+    },
+    {
+      "name": "JSP_SESSION_FIXATION",
+      "vul_type": "SESSION_MANAGEMENT",
+      "desc": "会话固定漏洞",
+      "severity": "Medium",
+      "file_exts": ["jsp", "jspx", "java"],
+      "patterns": [
+        "request\\.getSession\\(\\)",
+        "request\\.getSession\\s*\\(\\s*true\\s*\\)"
+      ],
+      "exclude_substrings": ["invalidate", "changeSessionId", "setMaxInactiveInterval"]
+    },
+    {
+      "name": "TEMPLATE_EL_INJECTION",
+      "vul_type": "EL_INJECTION",
+      "desc": "模板中EL表达式注入",
+      "severity": "High",
+      "file_exts": ["jsp", "jspx"],
+      "patterns": [
+        "\\$\\{[^}]*\\(.*request\\.getParameter",
+        "\\$\\{[^}]*\\(.*param\\.",
+        "\\$\\{[^}]*T\\(java\\.lang\\.Runtime\\)",
+        "\\$\\{[^}]*T\\(java\\.lang\\.Class\\)"
+      ]
+    },
+    {
+      "name": "JSP_XML_INJECTION",
+      "vul_type": "XML_INJECTION",
+      "desc": "JSP中XML注入风险",
+      "severity": "High",
+      "file_exts": ["jsp", "jspx"],
+      "patterns": [
+        "DocumentBuilder\\.parse\\s*\\(\\s*request",
+        "SAXParser\\.parse\\s*\\(\\s*request",
+        "XMLInputFactory.*request\\.get"
+      ],
+      "exclude_substrings": ["setFeature", "FEATURE_SECURE_PROCESSING"]
+    },
+    {
+      "name": "LDAP_INJECTION_TEMPLATE",
+      "vul_type": "LDAP_INJECTION",
+      "desc": "模板中LDAP注入",
+      "severity": "High",
+      "file_exts": ["jsp", "jspx", "java"],
+      "patterns": [
+        "DirContext\\.search\\s*\\(\\s*.*request\\.getParameter",
+        "InitialDirContext\\.search\\s*\\(\\s*.*request\\.getParameter",
+        "LdapTemplate\\.search\\s*\\(\\s*.*request\\.getParameter"
+      ],
+      "exclude_substrings": ["escapeValue", "encode", "filter"]
+    },
+    {
+      "name": "COMMAND_INJECTION_TEMPLATE",
+      "vul_type": "RCE",
+      "desc": "模板中命令注入",
+      "severity": "Critical",
+      "file_exts": ["jsp", "jspx", "ftl", "vm"],
+      "patterns": [
+        "Runtime\\.getRuntime\\(\\)\\.exec\\s*\\(\\s*.*\\$\\{",
+        "new\\s+ProcessBuilder\\s*\\(\\s*.*\\$\\{",
+        "ProcessBuilder.*start\\s*\\(\\s*.*\\$\\{"
+      ]
+    },
+    {
+      "name": "JSP_INCLUDE_PATH_PARAM",
+      "vul_type": "FILE_INCLUDE",
+      "desc": "JSP包含路径来自参数",
+      "severity": "High",
+      "file_exts": ["jsp", "jspx"],
+      "patterns": [
+        "<jsp:include\\s+page\\s*=\\s*\\\"[^\\\"]*request\\.getParameter",
+        "<jsp:forward\\s+page\\s*=\\s*\\\"[^\\\"]*request\\.getParameter",
+        "pageContext\\.include\\s*\\(\\s*request\\.getParameter"
+      ]
+    },
+    {
+      "name": "XSS_SCRIPTLET_OUTPUT",
+      "vul_type": "XSS",
+      "desc": "脚本片段直接输出",
+      "severity": "High",
+      "file_exts": ["jsp", "jspx"],
+      "patterns": [
+        "<%\\s*out\\.print\\s*\\(\\s*request\\.getParameter",
+        "<%\\s*out\\.println\\s*\\(\\s*request\\.getParameter",
+        "<%\\s*response\\.getWriter\\(\\)\\.print\\s*\\(\\s*request"
+      ]
+    },
+    {
+      "name": "HTTPONLY_COOKIE_MISSING",
+      "vul_type": "SECURITY_MISCONFIG",
+      "desc": "Cookie未设置HttpOnly标志",
+      "severity": "Medium",
+      "file_exts": ["jsp", "jspx", "java"],
+      "patterns": [
+        "Cookie\\s+.*\\s*=\\s*new\\s+Cookie",
+        "response\\.addCookie",
+        "Set-Cookie:"
+      ],
+      "exclude_substrings": ["setHttpOnly(true", "HttpOnly", "setHttpOnly(true)"]
+    },
+    {
+      "name": "SAME_SITE_COOKIE_MISSING",
+      "vul_type": "SECURITY_MISCONFIG",
+      "desc": "Cookie未设置SameSite属性",
+      "severity": "Low",
+      "file_exts": ["jsp", "jspx", "java"],
+      "patterns": [
+        "Cookie\\s+.*\\s*=\\s*new\\s+Cookie",
+        "response\\.addCookie",
+        "Set-Cookie:"
+      ],
+      "exclude_substrings": ["setSameSite", "SameSite"]
+    },
+    {
+      "name": "FRAME_OPTIONS_MISSING",
+      "vul_type": "SECURITY_MISCONFIG",
+      "desc": "缺少X-Frame-Options头",
+      "severity": "Medium",
+      "file_exts": ["jsp", "jspx", "java"],
+      "patterns": [
+        "response\\.setHeader|response\\.addHeader"
+      ],
+      "exclude_substrings": ["X-Frame-Options", "XFRAMEOPTIONS"]
+    },
+    {
+      "name": "CONTENT_TYPE_SNIFFING_RISK",
+      "vul_type": "SECURITY_MISCONFIG",
+      "desc": "存在内容类型嗅探风险",
+      "severity": "Low",
+      "file_exts": ["jsp", "jspx", "java"],
+      "patterns": [
+        "response\\.setContentType|response\\.setHeader.*Content-Type"
+      ],
+      "exclude_substrings": ["X-Content-Type-Options", "nosniff"]
+    },
+    {
+      "name": "CSP_HEADER_MISSING",
+      "vul_type": "SECURITY_MISCONFIG",
+      "desc": "缺少Content-Security-Policy头",
+      "severity": "Medium",
+      "file_exts": ["jsp", "jspx", "java"],
+      "patterns": [
+        "response\\.setHeader|response\\.addHeader"
+      ],
+      "exclude_substrings": ["Content-Security-Policy", "CSP"]
+    },
+    {
+      "name": "JSP_PATH_TRAVERSAL_INCLUDE",
+      "vul_type": "PATH_TRAVERSAL",
+      "desc": "JSP包含路径遍历",
+      "severity": "High",
+      "file_exts": ["jsp", "jspx"],
+      "patterns": [
+        "<jsp:include\\s+page\\s*=\\s*\\\"[^\\\"]*\\.\\./",
+        "<jsp:forward\\s+page\\s*=\\s*\\\"[^\\\"]*\\.\\./",
+        "request\\.getRequestDispatcher\\s*\\(\\s*[^)]*\\.\\./"
+      ]
+    },
+    {
+      "name": "TEMPLATE_COMMAND_INJECTION_VIA_PARAM",
+      "vul_type": "RCE",
+      "desc": "通过参数的命令注入",
+      "severity": "Critical",
+      "file_exts": ["jsp", "jspx", "ftl", "vm"],
+      "patterns": [
+        "Runtime\\.exec\\s*\\(\\s*.*param\\.",
+        "ProcessBuilder.*\\$\\{param\\.",
+        "exec\\s*\\(\\s*.*request\\.getParameter"
+      ]
+    },
+    {
+      "name": "JSP_HEADER_INJECTION_VIA_OUTPUT",
+      "vul_type": "HEADER_INJECTION",
+      "desc": "JSP响应头注入",
+      "severity": "Medium",
+      "file_exts": ["jsp", "jspx"],
+      "patterns": [
+        "response\\.setHeader\\s*\\(\\s*[^,]+,\\s*request\\.getParameter",
+        "response\\.addHeader\\s*\\(\\s*[^,]+,\\s*request\\.getParameter",
+        "response\\.setHeader\\s*\\(\\s*[^,]+,\\s*\\$\\{param\\."
+      ]
+    },
+    {
+      "name": "TEMPLATE_XSS_UNESCAPED_EXPRESSION",
+      "vul_type": "XSS",
+      "desc": "模板表达式未转义",
+      "severity": "High",
+      "file_exts": ["jsp", "jspx", "ftl", "vm", "html"],
+      "patterns": [
+        "\\$\\{[^}]*request\\.getParameter[^}]*\\}",
+        "\\$\\{[^}]*param\\.[^}]*\\}",
+        "<%\\s*=\\s*request\\.getParameter"
+      ],
+      "exclude_substrings": ["escapeXml", "?html", "?esc", "c:out"]
+    }
+  ],
+  "sanitizer_rules": [
+    {
+      "sanitizer_name": "ENCODING",
+      "sanitizers": [
+        "org.apache.commons.text.StringEscapeUtils:escapeHtml4|escapeEcmaScript|escapeJava|escapeXml",
+        "org.springframework.web.util.HtmlUtils:htmlEscape|htmlUnescape",
+        "org.owasp.encoder.Encode:forHtml|forJavaScript|forCssString|forUri",
+        "org.owasp.html.PolicyFactory:sanitize",
+        "org.apache.commons.lang3.StringEscapeUtils:escapeHtml4|escapeJava|escapeEcmaScript",
+        "com.google.common.html.HtmlEscapers:asEscaper",
+        "org.apache.commons.codec.net.URLCodec:encode|decode"
+      ]
+    },
+    {
+      "sanitizer_name": "VALIDATION",
+      "sanitizers": [
+        "org.apache.commons.validator.GenericValidator:matchRegexp|isEmail|isUrl",
+        "java.util.regex.Pattern:matches|compile",
+        "javax.validation.Validator:validate",
+        "org.hibernate.validator.internal.engine.ValidatorImpl:validate",
+        "com.google.common.base.Preconditions:checkArgument|checkNotNull",
+        "org.springframework.validation.Validator:validate",
+        "javax.validation.constraints.NotBlank|NotNull|Pattern|Size"
+      ]
+    },
+    {
+      "sanitizer_name": "SQL_PREPARED",
+      "sanitizers": [
+        "java.sql.PreparedStatement:setString|setInt|setLong|setBoolean|setDate|setTimestamp",
+        "org.springframework.jdbc.core.JdbcTemplate:query|update",
+        "org.mybatis.spring.SqlSessionTemplate:selectOne|selectList|insert|update|delete",
+        "org.hibernate.Session:createQuery|createNativeQuery"
+      ]
+    },
+    {
+      "sanitizer_name": "PATH_NORMALIZE",
+      "sanitizers": [
+        "java.io.File:getCanonicalPath|getCanonicalFile",
+        "java.nio.file.Path:normalize|toAbsolutePath|toRealPath",
+        "org.apache.commons.io.FilenameUtils:normalize|getFullPath",
+        "java.net.URI:normalize|resolve"
+      ]
+    },
+    {
+      "sanitizer_name": "COMMAND_SANITIZE",
+      "sanitizers": [
+        "org.apache.commons.exec.CommandLine:addArgument",
+        "org.springframework.util.ShellUtils:escapeArg",
+        "com.google.common.base.Shell:quote"
+      ]
+    },
+    {
+      "sanitizer_name": "XML_SAFE",
+      "sanitizers": [
+        "javax.xml.XMLConstants:FEATURE_SECURE_PROCESSING",
+        "javax.xml.parsers.DocumentBuilderFactory:setFeature",
+        "javax.xml.transform.TransformerFactory:setFeature",
+        "org.apache.commons.text.StringEscapeUtils:escapeXml10|escapeXml11"
+      ]
+    },
+    {
+      "sanitizer_name": "LDAP_ESCAPE",
+      "sanitizers": [
+        "javax.naming.ldap.Rdn:escapeValue",
+        "org.springframework.ldap.filter.Escape:escapeValue",
+        "com.unboundid.ldap.sdk.Filter:escapeValue"
+      ]
+    },
+    {
+      "sanitizer_name": "URL_VALIDATE",
+      "sanitizers": [
+        "java.net.URL:toURI",
+        "org.apache.commons.validator.routines.UrlValidator:isValid",
+        "org.springframework.util.StringUtils:hasText|hasLength"
+      ]
+    },
+    {
+      "sanitizer_name": "JSON_SANITIZE",
+      "sanitizers": [
+        "com.alibaba.fastjson.JSON:toJSONString",
+        "com.google.gson.Gson:toJson",
+        "com.fasterxml.jackson.databind.ObjectMapper:writeValueAsString",
+        "org.json.JSONObject:toString"
+      ]
+    },
+    {
+      "sanitizer_name": "CRYPTO_SECURE",
+      "sanitizers": [
+        "javax.crypto.Cipher:getInstance",
+        "java.security.SecureRandom:<init>|getInstance",
+        "org.bouncycastle.crypto.CipherParameters"
+      ]
+    },
+    {
+      "sanitizer_name": "SSRF_PROTECT",
+      "sanitizers": [
+        "java.net.URL:toURI",
+        "org.springframework.util.StringUtils:hasText",
+        "java.net.InetAddress:getByName|getByAddress"
+      ]
+    },
+    {
+      "sanitizer_name": "LOG_SANITIZE",
+      "sanitizers": [
+        "org.apache.commons.lang3.StringUtils:replace",
+        "org.slf4j.helpers.MessageFormatter:format",
+        "org.apache.logging.log4j.core.pattern.MessagePatternConverter:format"
+      ]
+    }
+  ]
+}

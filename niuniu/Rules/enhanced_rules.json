@@ -1,0 +1,234 @@
+{
+  "enhanced_template_rules": [
+    {
+      "name": "JSP_DIRECT_OUTPUT",
+      "vul_type": "XSS",
+      "desc": "JSP直接输出用户输入，缺少编码",
+      "severity": "High",
+      "file_exts": ["jsp", "jspx", "java"],
+      "patterns": [
+        "out\\.print\\s*\\(\\s*[^)]*request\\.getParameter",
+        "out\\.println\\s*\\(\\s*[^)]*request\\.getParameter",
+        "<%=.*request\\.getParameter",
+        "\\$\\{.*request\\.getParameter",
+        "response\\.getWriter\\(\\)\\.print\\s*\\(\\s*[^)]*request\\.getParameter",
+        "response\\.getWriter\\(\\)\\.println\\s*\\(\\s*[^)]*request\\.getParameter"
+      ],
+      "must_substrings": ["request.getParameter", "out.print", "println"],
+      "exclude_substrings": ["escapeHtml", "encode", "sanitize", "filter"]
+    },
+    {
+      "name": "JSP_SQL_INJECTION",
+      "vul_type": "SQLI",
+      "desc": "JSP中SQL拼接，存在注入风险",
+      "severity": "High",
+      "file_exts": ["jsp", "jspx", "java", "class"],
+      "patterns": [
+        "Statement\\.executeQuery\\s*\\(\\s*[^)]*\\+.*request\\.getParameter",
+        "PreparedStatement.*\\+.*request\\.getParameter",
+        "SQL\\s*[+]=\\s*.*request\\.getParameter",
+        "StringBuilder.*append.*request\\.getParameter.*executeQuery",
+        "StringBuffer.*append.*request\\.getParameter.*executeQuery"
+      ],
+      "must_substrings": ["request.getParameter", "executeQuery", "Statement"],
+      "exclude_substrings": ["PreparedStatement", "setString", "setInt"]
+    },
+    {
+      "name": "JSP_PATH_TRAVERSAL",
+      "vul_type": "PATH_TRAVERSAL",
+      "desc": "JSP文件操作使用用户输入路径，存在路径遍历风险",
+      "severity": "High",
+      "file_exts": ["jsp", "jspx", "java", "class"],
+      "patterns": [
+        "new\\s+File\\s*\\(\\s*[^)]*request\\.getParameter",
+        "FileInputStream\\s*\\(\\s*[^)]*request\\.getParameter",
+        "FileOutputStream\\s*\\(\\s*[^)]*request\\.getParameter",
+        "getRealPath\\s*\\(\\s*[^)]*request\\.getParameter",
+        "\\.\\./.*request\\.getParameter",
+        "\\.\\.\\\\\\\\.*request\\.getParameter"
+      ],
+      "must_substrings": ["request.getParameter", "File", "getRealPath", "../"],
+      "exclude_substrings": ["getCanonicalPath", "normalize", "Path.normalize"]
+    },
+    {
+      "name": "JSP_RCE_EXEC",
+      "vul_type": "RCE",
+      "desc": "JSP中执行系统命令，存在命令注入风险",
+      "severity": "Critical",
+      "file_exts": ["jsp", "jspx", "java", "class"],
+      "patterns": [
+        "Runtime\\.getRuntime\\(\\)\\.exec\\s*\\(\\s*[^)]*request\\.getParameter",
+        "ProcessBuilder\\s*\\(\\s*[^)]*request\\.getParameter",
+        "ProcessBuilder.*start\\s*\\(\\s*[^)]*request\\.getParameter",
+        "ScriptEngine.*eval\\s*\\(\\s*[^)]*request\\.getParameter"
+      ],
+      "must_substrings": ["request.getParameter", "exec", "Runtime", "ProcessBuilder"],
+      "exclude_substrings": []
+    },
+    {
+      "name": "JSP_RESPONSE_HEADER_INJECTION",
+      "vul_type": "HEADER_INJECTION",
+      "desc": "JSP响应头注入，使用用户输入设置响应头",
+      "severity": "Medium",
+      "file_exts": ["jsp", "jspx", "java"],
+      "patterns": [
+        "response\\.setHeader\\s*\\(\\s*[^)]*request\\.getParameter",
+        "response\\.addHeader\\s*\\(\\s*[^)]*request\\.getParameter",
+        "response\\.setContentType\\s*\\(\\s*[^)]*request\\.getParameter"
+      ],
+      "must_substrings": ["response.setHeader", "response.addHeader", "request.getParameter"],
+      "exclude_substrings": []
+    },
+    {
+      "name": "JSP_REDIRECT",
+      "vul_type": "REDIRECT",
+      "desc": "JSP未验证的重定向，存在开放重定向风险",
+      "severity": "Medium",
+      "file_exts": ["jsp", "jspx", "java"],
+      "patterns": [
+        "response\\.sendRedirect\\s*\\(\\s*[^)]*request\\.getParameter",
+        "response\\.setHeader\\s*\\(\\s*[\"']Location[\"']\\s*,\\s*[^)]*request\\.getParameter"
+      ],
+      "must_substrings": ["sendRedirect", "Location", "request.getParameter"],
+      "exclude_substrings": ["isValidRedirect", "validateUrl"]
+    },
+    {
+      "name": "JSP_FILE_UPLOAD",
+      "vul_type": "FILE_WRITE",
+      "desc": "JSP文件上传未验证文件名和路径",
+      "severity": "High",
+      "file_exts": ["jsp", "jspx", "java"],
+      "patterns": [
+        "MultipartFile.*transferTo\\s*\\(\\s*[^)]*request\\.getParameter",
+        "Part\\.write\\s*\\(\\s*[^)]*request\\.getParameter",
+        "FileOutputStream.*new\\s+File\\s*\\(\\s*[^)]*request\\.getParameter"
+      ],
+      "must_substrings": ["MultipartFile", "Part.write", "FileOutputStream", "request.getParameter"],
+      "exclude_substrings": ["getOriginalFilename", "validate"]
+    },
+    {
+      "name": "JSP_XPATH_INJECTION",
+      "vul_type": "XPATH_INJECTION",
+      "desc": "JSP中XPath查询使用用户输入，存在注入风险",
+      "severity": "High",
+      "file_exts": ["jsp", "jspx", "java"],
+      "patterns": [
+        "XPathExpression.*evaluate\\s*\\(\\s*[^)]*request\\.getParameter",
+        "XPath.*compile\\s*\\(\\s*[^)]*request\\.getParameter"
+      ],
+      "must_substrings": ["XPath", "evaluate", "request.getParameter"],
+      "exclude_substrings": []
+    },
+    {
+      "name": "JSP_LDAP_INJECTION",
+      "vul_type": "LDAP_INJECTION",
+      "desc": "JSP中LDAP查询使用用户输入，存在注入风险",
+      "severity": "High",
+      "file_exts": ["jsp", "jspx", "java"],
+      "patterns": [
+        "DirContext.*search\\s*\\(\\s*[^)]*request\\.getParameter",
+        "LdapContext.*search\\s*\\(\\s*[^)]*request\\.getParameter"
+      ],
+      "must_substrings": ["DirContext", "LdapContext", "search", "request.getParameter"],
+      "exclude_substrings": []
+    },
+    {
+      "name": "JSP_XML_INJECTION",
+      "vul_type": "XXE",
+      "desc": "JSP中XML解析使用用户输入，存在XXE风险",
+      "severity": "High",
+      "file_exts": ["jsp", "jspx", "java"],
+      "patterns": [
+        "DocumentBuilder.*parse\\s*\\(\\s*[^)]*request\\.getParameter",
+        "SAXParser.*parse\\s*\\(\\s*[^)]*request\\.getParameter",
+        "XMLReader.*parse\\s*\\(\\s*[^)]*request\\.getParameter"
+      ],
+      "must_substrings": ["DocumentBuilder", "SAXParser", "XMLReader", "parse", "request.getParameter"],
+      "exclude_substrings": ["setFeature", "XMLConstants.FEATURE_SECURE_PROCESSING"]
+    },
+    {
+      "name": "JSP_EL_INJECTION",
+      "vul_type": "CODE_INJECTION",
+      "desc": "JSP EL表达式注入，用户输入进入EL表达式",
+      "severity": "High",
+      "file_exts": ["jsp", "jspx"],
+      "patterns": [
+        "\\$\\{.*request\\.getParameter[^}]*\\}",
+        "\\$\\{.*param\\.[^}]*\\}",
+        "#\\{.*request\\.getParameter[^}]*\\}"
+      ],
+      "must_substrings": ["${", "request.getParameter", "param."],
+      "exclude_substrings": []
+    },
+    {
+      "name": "JSP_JNDI_INJECTION",
+      "vul_type": "JNDI_INJECTION",
+      "desc": "JSP中JNDI查找使用用户输入，存在JNDI注入风险",
+      "severity": "Critical",
+      "file_exts": ["jsp", "jspx", "java"],
+      "patterns": [
+        "InitialContext.*lookup\\s*\\(\\s*[^)]*request\\.getParameter",
+        "Context.*lookup\\s*\\(\\s*[^)]*request\\.getParameter"
+      ],
+      "must_substrings": ["InitialContext", "Context.lookup", "request.getParameter"],
+      "exclude_substrings": []
+    },
+    {
+      "name": "JSP_INSECURE_COOKIE",
+      "vul_type": "SECURITY_MISCONFIG",
+      "desc": "JSP设置Cookie时缺少安全标志",
+      "severity": "Medium",
+      "file_exts": ["jsp", "jspx", "java"],
+      "patterns": [
+        "Cookie.*new\\s+Cookie\\s*\\([^)]*\\)",
+        "response\\.addCookie\\s*\\([^)]*\\)"
+      ],
+      "must_substrings": ["Cookie", "addCookie"],
+      "exclude_substrings": ["setHttpOnly", "setSecure", "setMaxAge"]
+    },
+    {
+      "name": "JSP_HARDCODED_PASSWORD",
+      "vul_type": "HARDCODED_SECRET",
+      "desc": "JSP中硬编码密码或密钥",
+      "severity": "High",
+      "file_exts": ["jsp", "jspx", "java", "class"],
+      "patterns": [
+        "password\\s*=\\s*[\"'][^\"']{3,}[\"']",
+        "pwd\\s*=\\s*[\"'][^\"']{3,}[\"']",
+        "secret\\s*=\\s*[\"'][^\"']{3,}[\"']",
+        "api[_-]?key\\s*=\\s*[\"'][^\"']{3,}[\"']"
+      ],
+      "must_substrings": ["password", "pwd", "secret", "api"],
+      "exclude_substrings": ["password=", "password:", "// password", "password = \"\"", "password = ''"]
+    },
+    {
+      "name": "JSP_WEAK_CRYPTO",
+      "vul_type": "WEAK_CRYPTO",
+      "desc": "JSP中使用弱加密算法",
+      "severity": "Medium",
+      "file_exts": ["jsp", "jspx", "java"],
+      "patterns": [
+        "MessageDigest\\.getInstance\\s*\\(\\s*[\"']MD5[\"']",
+        "MessageDigest\\.getInstance\\s*\\(\\s*[\"']SHA1[\"']",
+        "Cipher\\.getInstance\\s*\\(\\s*[\"']DES[\"']",
+        "Cipher\\.getInstance\\s*\\(\\s*[\"']RC4[\"']"
+      ],
+      "must_substrings": ["MessageDigest.getInstance", "Cipher.getInstance", "MD5", "SHA1", "DES"],
+      "exclude_substrings": ["SHA-256", "SHA-512", "AES"]
+    },
+    {
+      "name": "JSP_SESSION_FIXATION",
+      "vul_type": "SESSION_MANAGEMENT",
+      "desc": "JSP会话固定漏洞，未重新生成会话ID",
+      "severity": "Medium",
+      "file_exts": ["jsp", "jspx", "java"],
+      "patterns": [
+        "request\\.getSession\\s*\\(\\s*true\\s*\\)",
+        "request\\.getSession\\s*\\(\\s*\\)"
+      ],
+      "must_substrings": ["getSession"],
+      "exclude_substrings": ["invalidate", "regenerateId"]
+    }
+  ]
+}
+

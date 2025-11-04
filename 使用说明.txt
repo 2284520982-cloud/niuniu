@@ -1,0 +1,50 @@
+========================================
+  Niuniu Java 安全审计工具
+  开箱即用指南
+========================================
+
+【最简单启动方式】
+
+✅ Windows用户：
+   双击 start.bat 文件即可启动
+
+✅ Linux/Mac用户：
+   chmod +x start.sh
+   ./start.sh
+
+✅ 或直接运行：
+   python start.py
+
+【启动后访问】
+
+浏览器打开：http://localhost:7777/static/index.html
+
+【首次使用步骤】
+
+1. 启动服务（双击start.bat或运行start.sh）
+2. 打开浏览器访问 http://localhost:7777/static/index.html
+3. 填写项目路径（要扫描的Java项目）
+4. 点击"开始扫描"
+
+【默认配置】
+
+✓ 服务端口：7777
+✓ 规则文件：Rules/rules.json（自动加载所有规则）
+✓ 扫描深度：15层
+✓ 模板扫描：开启
+✓ Lite富化：开启
+
+【注意事项】
+
+- 确保Python版本 >= 3.8
+- 首次运行会自动安装依赖
+- 扫描大项目需要时间，请耐心等待
+- 推荐使用Chrome或Edge浏览器
+
+【快速测试】
+
+访问 http://localhost:7777/api/ping
+应该返回：{"ok": true}
+
+========================================
+

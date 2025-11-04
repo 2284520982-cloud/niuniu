@@ -1,0 +1,213 @@
+{
+  "enhanced_source_rules": [
+    {
+      "source_name": "HTTP_REQUEST",
+      "sources": [
+        "javax.servlet.http.HttpServletRequest:getParameter|getParameterValues|getParameterMap|getHeader|getHeaders|getCookies|getQueryString|getInputStream|getReader|getPathInfo|getServletPath|getContextPath|getRequestURI|getRequestURL|getRemoteAddr|getRemoteHost|getUserPrincipal|getAuthType",
+        "javax.servlet.ServletRequest:getParameter|getParameterValues|getParameterMap|getInputStream|getReader|getAttribute|getLocale|getCharacterEncoding",
+        "org.springframework.web.bind.annotation.RequestParam",
+        "org.springframework.web.bind.annotation.RequestHeader",
+        "org.springframework.web.bind.annotation.PathVariable",
+        "org.springframework.web.bind.annotation.RequestBody",
+        "org.springframework.web.bind.annotation.CookieValue",
+        "org.springframework.web.bind.annotation.RequestAttribute",
+        "javax.ws.rs.core.HttpHeaders:getHeaderString|getRequestHeader|getCookies",
+        "javax.ws.rs.PathParam|QueryParam|HeaderParam|CookieParam|FormParam",
+        "javax.servlet.http.HttpSession:getAttribute|getValue",
+        "javax.servlet.ServletContext:getAttribute|getInitParameter",
+        "javax.servlet.http.Cookie:getValue|getName",
+        "org.springframework.web.context.request.RequestAttributes:getAttribute",
+        "org.springframework.web.context.request.WebRequest:getParameter|getHeader|getAttribute",
+        "org.springframework.ui.Model:getAttribute|asMap",
+        "org.springframework.ui.ModelMap:get|getAttribute",
+        "org.springframework.web.servlet.support.RequestContext:getMessage|getTheme",
+        "jakarta.servlet.http.HttpServletRequest:getParameter|getHeader|getCookies",
+        "jakarta.servlet.ServletRequest:getParameter|getInputStream|getReader"
+      ]
+    },
+    {
+      "source_name": "HTTP_RESPONSE",
+      "sources": [
+        "javax.servlet.http.HttpServletResponse:getHeader|getHeaderNames|getCharacterEncoding|getContentType|getLocale",
+        "org.springframework.http.HttpHeaders:get|getFirst|getValues",
+        "org.springframework.http.ResponseEntity:getHeaders|getBody"
+      ]
+    },
+    {
+      "source_name": "DATABASE_QUERY",
+      "sources": [
+        "java.sql.ResultSet:getString|getInt|getLong|getBoolean|getDate|getTimestamp|getObject|getBytes|getBlob|getClob",
+        "org.hibernate.Query:list|uniqueResult|iterate|scroll",
+        "org.hibernate.Session:get|load|createQuery|createSQLQuery|createNamedQuery",
+        "org.mybatis.spring.SqlSessionTemplate:selectOne|selectList|selectMap",
+        "org.springframework.jdbc.core.JdbcTemplate:query|queryForObject|queryForList|queryForMap"
+      ]
+    },
+    {
+      "source_name": "PROPERTIES_CONFIG",
+      "sources": [
+        "java.util.Properties:getProperty|get|getPropertyNames",
+        "java.util.ResourceBundle:getString|getObject|getKeys",
+        "org.springframework.core.env.Environment:getProperty|getRequiredProperty",
+        "org.springframework.beans.factory.annotation.Value",
+        "org.apache.commons.configuration2.Configuration:getString|getProperty|getBoolean|getInt",
+        "com.typesafe.config.Config:getString|getInt|getBoolean|getConfig"
+      ]
+    },
+    {
+      "source_name": "FILE_READ",
+      "sources": [
+        "java.io.FileInputStream:read|readAllBytes",
+        "java.io.FileReader:read",
+        "java.nio.file.Files:readAllBytes|readAllLines|readString|readString",
+        "org.apache.commons.io.FileUtils:readFileToString|readFileToByteArray|readLines",
+        "java.util.Scanner:next|nextLine|nextInt|hasNext",
+        "java.io.BufferedReader:readLine|read",
+        "java.io.InputStreamReader:read"
+      ]
+    },
+    {
+      "source_name": "NETWORK_IO",
+      "sources": [
+        "java.net.Socket:getInputStream|getOutputStream|getInetAddress|getRemoteSocketAddress",
+        "java.net.URLConnection:getInputStream|getOutputStream|getHeaderField|getHeaderFields",
+        "java.net.HttpURLConnection:getInputStream|getOutputStream|getResponseCode|getResponseMessage",
+        "org.apache.http.HttpResponse:getEntity|getStatusLine|getAllHeaders",
+        "org.apache.http.client.methods.CloseableHttpResponse:getEntity|getStatusLine",
+        "okhttp3.Response:body|headers|code|message"
+      ]
+    },
+    {
+      "source_name": "ENVIRONMENT_VARIABLES",
+      "sources": [
+        "System.getProperty|getenv|getProperties",
+        "java.lang.Runtime:exec|getRuntime",
+        "java.lang.Process:getInputStream|getOutputStream|getErrorStream",
+        "java.lang.ProcessBuilder:start|command"
+      ]
+    },
+    {
+      "source_name": "REFLECTION_ACCESS",
+      "sources": [
+        "java.lang.reflect.Method:invoke",
+        "java.lang.reflect.Constructor:newInstance",
+        "java.lang.reflect.Field:get|getInt|getLong|getString",
+        "java.lang.Class:forName|newInstance|getMethod|getField|getConstructor",
+        "java.lang.ClassLoader:loadClass|getResource|getResourceAsStream"
+      ]
+    },
+    {
+      "source_name": "SERIALIZATION_DESERIALIZATION",
+      "sources": [
+        "java.io.ObjectInputStream:readObject|readUnshared|readUTF|readInt|readLong|readBoolean",
+        "java.io.ObjectOutputStream:writeObject|writeUnshared",
+        "com.alibaba.fastjson.JSON:parse|parseObject|parseArray",
+        "com.alibaba.fastjson2.JSON:parse|parseObject",
+        "com.google.gson.Gson:fromJson",
+        "com.fasterxml.jackson.databind.ObjectMapper:readValue|readTree|readValues",
+        "org.yaml.snakeyaml.Yaml:load|loadAs|loadAll",
+        "com.thoughtworks.xstream.XStream:fromXML|toXML"
+      ]
+    },
+    {
+      "source_name": "LDAP_DIRECTORY",
+      "sources": [
+        "javax.naming.directory.DirContext:search|getAttributes|list|listBindings",
+        "javax.naming.directory.InitialDirContext:search|getAttributes",
+        "javax.naming.Context:lookup|list|listBindings",
+        "javax.naming.InitialContext:lookup|list",
+        "org.springframework.ldap.core.LdapTemplate:search|find|findOne|list|lookup"
+      ]
+    },
+    {
+      "source_name": "CRYPTO_KEYS",
+      "sources": [
+        "java.security.KeyStore:getKey|getCertificate|getCertificateChain",
+        "java.security.KeyFactory:generatePrivate|generatePublic",
+        "javax.crypto.KeyGenerator:generateKey",
+        "javax.crypto.SecretKeyFactory:generateSecret",
+        "org.bouncycastle.jce.provider.JCEKeyGenerator:generate",
+        "java.security.SecureRandom:nextBytes|nextInt|nextLong"
+      ]
+    },
+    {
+      "source_name": "LOG_OUTPUT",
+      "sources": [
+        "org.slf4j.Logger:info|debug|warn|error|trace",
+        "org.apache.log4j.Logger:info|debug|warn|error|fatal",
+        "java.util.logging.Logger:info|warning|severe|fine|finer|finest",
+        "org.apache.logging.log4j.Logger:info|debug|warn|error|trace|fatal",
+        "org.apache.commons.logging.Log:info|debug|warn|error|fatal|trace",
+        "System.out.println|print|printf|format",
+        "System.err.println|print"
+      ]
+    },
+    {
+      "source_name": "DATABASE_METADATA",
+      "sources": [
+        "java.sql.DatabaseMetaData:getColumns|getTables|getPrimaryKeys|getIndexInfo|getSchemas|getCatalogs",
+        "java.sql.Connection:getMetaData|getCatalog|getSchema",
+        "org.hibernate.SessionFactory:getAllClassMetadata|getMetadata"
+      ]
+    },
+    {
+      "source_name": "WEB_SOCKET",
+      "sources": [
+        "javax.websocket.Session:getBasicRemote|getAsyncRemote|getPathParameters|getQueryString|getRequestURI",
+        "org.springframework.web.socket.WebSocketSession:getUri|getAttributes|getHandshakeHeaders",
+        "org.springframework.web.socket.TextMessage:getPayload|asBytes"
+      ]
+    },
+    {
+      "source_name": "GRAPHQL",
+      "sources": [
+        "graphql.ExecutionInput:getQuery|getVariables|getOperationName|getContext",
+        "graphql.GraphQL:execute|executeAsync",
+        "com.graphql-java-kickstart.graphql.GraphQLQueryResolver:resolve|getQuery"
+      ]
+    },
+    {
+      "source_name": "REDIS_CACHE",
+      "sources": [
+        "redis.clients.jedis.Jedis:get|mget|hget|hgetAll|smembers|lrange|zrange",
+        "org.springframework.data.redis.core.RedisTemplate:opsForValue|opsForHash|opsForList|opsForSet",
+        "org.springframework.data.redis.core.StringRedisTemplate:opsForValue|opsForHash"
+      ]
+    },
+    {
+      "source_name": "MQ_MESSAGE",
+      "sources": [
+        "javax.jms.Message:getStringProperty|getObjectProperty|getBody|getText",
+        "org.springframework.jms.core.JmsTemplate:receive|receiveAndConvert",
+        "org.apache.kafka.clients.consumer.ConsumerRecord:value|key|headers|topic|partition",
+        "org.springframework.kafka.annotation.KafkaListener",
+        "org.springframework.amqp.core.Message:getBody|getMessageProperties"
+      ]
+    },
+    {
+      "source_name": "MICROSERVICE",
+      "sources": [
+        "org.springframework.cloud.openfeign.FeignClient",
+        "org.springframework.web.reactive.function.client.WebClient:get|post|put|delete",
+        "com.netflix.hystrix.HystrixCommand:execute|queue",
+        "org.springframework.cloud.gateway.filter.GatewayFilterChain:filter"
+      ]
+    },
+    {
+      "source_name": "SPRING_EXPRESSION",
+      "sources": [
+        "org.springframework.expression.Expression:getValue|setValue",
+        "org.springframework.expression.spel.standard.SpelExpressionParser:parseExpression",
+        "org.springframework.expression.EvaluationContext:getVariable|getRoot|getPropertyAccessors"
+      ]
+    },
+    {
+      "source_name": "OSGI",
+      "sources": [
+        "org.osgi.framework.BundleContext:getService|getServiceReferences|getBundles",
+        "org.osgi.framework.ServiceReference:getProperty|getProperties"
+      ]
+    }
+  ]
+}
+

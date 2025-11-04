@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Niuniu Java 安全审计</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="brand">
+      <span class="logo">🐂</span>
+      <div>
+        <h1>Niuniu Java 安全审计</h1>
+        <p class="subtitle">函数级回溯 · 规则驱动 · AI 风险总结</p>
+      </div>
+    </div>
+    <div class="actions">
+      <button id="btnScan" class="primary">
+        <span class="btn-text">开始扫描</span>
+        <span class="btn-loading" style="display:none">
+          <span class="spinner-small"></span> 扫描中...
+        </span>
+      </button>
+      <button id="btnClear" class="ghost">清空结果</button>
+      <button id="btnExport" class="ghost" title="导出当前筛选结果">导出报告</button>
+      <button id="btnSettings" class="ghost" title="设置">⚙️</button>
+    </div>
+  </header>
+  
+  <!-- 全局搜索框 -->
+  <div id="globalSearch" class="global-search hidden">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="搜索漏洞、sink、文件路径... (Ctrl+K)" />
+      <button id="searchClose" class="ghost">✕</button>
+    </div>
+    <div id="searchResults" class="search-results"></div>
+  </div>
+  
+  <!-- 加载遮罩 -->
+  <div id="loadingOverlay" class="loading-overlay hidden">
+    <div class="loading-content">
+      <div class="spinner-large"></div>
+      <div class="loading-text">处理中...</div>
+      <div class="loading-progress" id="loadingProgress"></div>
+    </div>
+  </div>
+
+  <main class="grid">
+    <section class="panel" id="sidePanel">
+      <h2>功能列表</h2>
+      <ul id="featureList" style="list-style:none;padding-left:0;display:flex;flex-direction:column;gap:8px;">
+        <li><button class="ghost active" data-target="dashboard">控制面板</button></li>
+        <li><button class="ghost" data-target="audit">自动审计</button></li>
+        <li><button class="ghost" data-target="ai">AI 管理</button></li>
+        <li><button class="ghost" data-target="rules">规则管理</button></li>
+        <li><button class="ghost" data-target="vulns">漏洞管理</button></li>
+        <li><button class="ghost" data-target="templates">模板扫描</button></li>
+        <li><button class="ghost" data-target="reports">报告管理</button></li>
+        <!-- 移除"总设置"按钮，功能已整合到"自动审计"页面 -->
+      </ul>
+    </section>
+    <!-- 控制面板（仪表盘） -->
+    <section class="panel" id="view_dashboard" style="grid-column:2/3">
+      <div class="panel-head">
+        <h2>控制面板</h2>
+        <button id="btnRefreshMetrics" class="ghost">刷新指标</button>
+      </div>
+      <div class="metrics">
+        <div class="tile blue"><h3>文件速率</h3><div id="metric_rate">0 / 分钟</div></div>
+        <div class="tile green"><h3>已解析</h3><div id="metric_parsed">0</div></div>
+        <div class="tile orange"><h3>总文件数</h3><div id="metric_total">0</div></div>
+        <div class="tile red"><h3>漏洞总数</h3><div id="metric_vulns">0</div></div>
+        <div class="tile purple"><h3>模板扫描</h3><div id="metric_tmpl">ON</div></div>
+        <div class="tile blue"><h3>引擎</h3><div id="metric_engine">lite</div></div>
+      </div>
+      <div class="quick-actions">
+        <button class="primary" id="qaStart">
+          <span class="btn-text">开始扫描</span>
+          <span class="btn-loading" style="display:none">
+            <span class="spinner-small"></span> 扫描中...
+          </span>
+        </button>
+        <button class="ghost" id="qaToggleTmpl" title="切换模板扫描开关">切换模板扫描</button>
+        <button class="ghost" id="qaToggleLite" title="切换富化模式">切换 Lite 富化</button>
+        <button class="ghost" id="qaSwitchLite" title="切换到轻量引擎">切换为轻量</button>
+        <button class="ghost" id="qaSwitchOrig" title="切换到完整引擎">切换为完整</button>
+      </div>
+      <div class="tip" style="margin-top:12px;padding:8px;background:#0f2034;border-radius:6px">
+        <strong>快捷键：</strong> Ctrl+K 搜索 | Esc 关闭 | 点击卡片可选中进行批量操作
+      </div>
+    </section>
+
+    <!-- 自动审计（原“项目与规则”） -->
+    <section class="panel" id="view_audit" style="grid-column:2/3">
+      <h2>项目与规则</h2>
+      <div class="field">
+        <label>Java 项目路径</label>
+        <input id="projectPath" placeholder="例如：D:/Code/Github/java-sec-code" />
+      </div>
+      <div class="field">
+        <label>规则文件路径</label>
+        <input id="rulesPath" value="Rules/rules.json" />
+      </div>
+      <div class="field">
+        <label>后端地址</label>
+        <input id="backendUrl" value="http://localhost:7777" />
+      </div>
+      <div class="field">
+        <label>分析引擎</label>
+        <select id="engine">
+          <option value="original">原始完整引擎（含代码提取）</option>
+          <option value="lite">轻量引擎（仅链路）</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>选择漏洞类型（可多选）</label>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+          <button id="btnSinkAll" class="ghost">全选</button>
+          <button id="btnSinkNone" class="ghost">清空</button>
+        </div>
+        <div id="sinkTypeChips" class="chips"></div>
+      </div>
+      <div class="inline">
+        <div class="field">
+          <label>回溯深度（推荐15+）</label>
+          <input id="depth" type="number" min="1" max="30" value="15" />
+        </div>
+        <div class="field">
+          <label>最大显示链条数/漏洞</label>
+          <input id="maxChains" type="number" min="1" max="100" value="50" />
+        </div>
+        <div class="field">
+          <label>单链路超时（秒，推荐600+）</label>
+          <input id="maxSeconds" type="number" min="10" max="3600" value="600" />
+        </div>
+
+        <div class="field">
+          <label>模板文件扫描</label>
+          <select id="templateScan">
+            <option value="on">开启</option>
+            <option value="off">关闭</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Lite 富化计算（推荐开启）</label>
+          <select id="liteEnrich">
+            <option value="on">开启（包含打分/消毒/溯源，更准确）</option>
+            <option value="off">关闭（更快，仅返回链路）</option>
+          </select>
+        </div>
+      </div>
+      <div class="inline">
+        <div class="field">
+          <label style="display:flex;align-items:center;gap:6px">
+            <input id="applyMustSub" type="checkbox" />
+            启用严格字符串匹配（降低误报）
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI 管理 -->
+    <section class="panel" id="view_ai" style="grid-column:2/3">
+      <h2>AI 风险总结（可选）</h2>
+      <div class="field">
+        <label>API Base</label>
+        <input id="apiBase" value="https://spark-api-open.xf-yun.com/v2" />
+      </div>
+      <div class="field">
+        <label>Model</label>
+        <input id="model" value="x1" />
+      </div>
+      <div class="field">
+        <label>API Key</label>
+        <input id="apiKey" type="password" placeholder="填 APIpassword 或 AK:SK（OpenAI兼容）" />
+      </div>
+      <div class="inline">
+        <button id="btnAIAll" class="ghost">AI 总结全部</button>
+        <span id="aiAllProgress" class="tip"></span>
+      </div>
+      <p class="tip">不提供 API Key 也可使用扫描与源码查看；提供后可对选定链路进行 AI 总结。</p>
+    </section>
+
+
+    <!-- 漏洞管理（扫描结果） -->
+    <section class="panel" id="view_vulns" style="grid-column:2/3">
+      <div class="panel-head">
+        <h2>扫描结果</h2>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <div id="summary"></div>
+          <button id="btnSearch" class="ghost" title="全局搜索 (Ctrl+K)">🔍 搜索</button>
+          <button id="btnBatchOps" class="ghost" title="批量操作">批量操作</button>
+          <button id="btnToggleView" class="ghost">切换视图</button>
+          <label>Severity
+            <select id="mainSeverity">
+              <option value="">全部</option>
+              <option>Critical</option>
+              <option>High</option>
+              <option>Medium</option>
+              <option>Low</option>
+            </select>
+          </label>
+          <label>类型筛选 <input id="mainTypeFilter" placeholder="如: RCE/SQLI/SSRF/XXE" style="width:220px"/></label>
+          <label>置信度 <input id="confidenceFilter" type="range" min="0" max="100" value="0" style="width:100px"/><span id="confValue">0%</span></label>
+        </div>
+      </div>
+      <!-- 统计信息卡片 -->
+      <div id="statsCards" class="stats-cards" style="display:none"></div>
+      <!-- 分类视图切换 -->
+      <div id="viewModeTabs" class="view-tabs">
+        <button class="view-tab active" data-view="severity">按严重性</button>
+        <button class="view-tab" data-view="type">按类型</button>
+        <button class="view-tab" data-view="confidence">按置信度</button>
+        <button class="view-tab" data-view="all">全部</button>
+      </div>
+      <div id="result"></div>
+    </section>
+
+    <!-- 规则管理（源码查看区域替代为规则页签） -->
+    <section class="panel" id="view_rules" style="grid-column:2/3">
+      <div class="panel-head">
+        <h2>源码查看</h2>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <button id="btnCopyCode" class="ghost" title="复制当前显示的源码">复制代码</button>
+          <button id="btnClearCode" class="ghost" title="清空源码显示">清空</button>
+          <button id="btnFormatCode" class="ghost" title="格式化代码（简单）">格式化</button>
+        </div>
+      </div>
+      <div class="tip" style="margin-bottom:8px">点击任意卡片中的"查看源码"将在此面板展示对应链路的源码片段</div>
+      <pre id="sourceCode" class="code-block" style="min-height:240px;white-space:pre-wrap"></pre>
+    </section>
+
+    <!-- 模板扫描（单独回显界面） -->
+    <section class="panel" id="view_templates" style="grid-column:2/3">
+      <div class="panel-head">
+        <h2>模板扫描结果</h2>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <button id="btnTmplScan" class="primary">开始模板扫描（仅模板）</button>
+          <label style="display:flex;align-items:center;gap:6px"><input id="ignoreSkipDirs" type="checkbox" /> 忽略跳过目录</label>
+          <label style="display:flex;align-items:center;gap:6px"><input id="applyMustSubTmpl" type="checkbox" /> 启用严格匹配</label>
+          <label>Severity
+            <select id="tmplSeverity">
+              <option value="">全部</option>
+              <option>Critical</option>
+              <option>High</option>
+              <option>Medium</option>
+              <option>Low</option>
+            </select>
+          </label>
+          <label>类型筛选 <input id="tmplTypeFilter" placeholder="如: RCE/SQLI/PATH_TRAVERSAL" style="width:220px"/></label>
+          <label>置信度 <input id="tmplConfidenceFilter" type="range" min="0" max="100" value="0" style="width:100px"/><span id="tmplConfValue">0%</span></label>
+          <div id="tmplSummary" class="tip"></div>
+        </div>
+      </div>
+      <!-- 模板扫描统计卡片 -->
+      <div id="tmplStatsCards" class="stats-cards" style="display:none"></div>
+      <!-- 模板扫描视图切换 -->
+      <div id="tmplViewModeTabs" class="view-tabs">
+        <button class="view-tab active" data-view="severity">按严重性</button>
+        <button class="view-tab" data-view="type">按类型</button>
+        <button class="view-tab" data-view="confidence">按置信度</button>
+        <button class="view-tab" data-view="all">全部</button>
+      </div>
+      <div id="tmplResult"></div>
+    </section>
+
+    <!-- 报告管理（扫描进度展示） -->
+    <section class="panel" id="view_reports" style="grid-column:2/3">
+      <div class="panel-head">
+        <h2>扫描进度</h2>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <button id="btnPauseScan" class="ghost" style="display:none">暂停扫描</button>
+          <button id="btnResumeScan" class="ghost" style="display:none">继续扫描</button>
+          <button id="btnStopScan" class="ghost" style="display:none">停止扫描</button>
+          <button id="btnRefreshProgress" class="ghost">刷新进度</button>
+        </div>
+      </div>
+      <div id="progressInfo" class="tip"></div>
+      <div id="progress"></div>
+    </section>
+  </main>
+
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-head">
+        <h3 id="modalTitle">源码查看</h3>
+        <button id="modalClose" class="ghost">关闭</button>
+      </div>
+      <pre id="modalBody" class="code-block"></pre>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script type="module" src="/static/js/main.js"></script>
+</body>
+</html>

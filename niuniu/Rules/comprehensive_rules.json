@@ -1,0 +1,303 @@
+{
+  "comprehensive_rules": [
+    {
+      "name": "GRAPHQL_INJECTION",
+      "vul_type": "GRAPHQL_INJECTION",
+      "desc": "GraphQL注入漏洞",
+      "severity": "High",
+      "file_exts": ["java"],
+      "patterns": [
+        "GraphQLQueryResolver.*execute.*query",
+        "DataFetcher.*get.*query",
+        "graphql\\.GraphQL\\.execute.*query",
+        "ExecutionInput.*query.*variable"
+      ],
+      "must_substrings": ["query", "GraphQL"],
+      "exclude_substrings": ["validation", "sanitize", "escape"]
+    },
+    {
+      "name": "NQUERYDSL_INJECTION",
+      "vul_type": "NOSQL_INJECTION",
+      "desc": "QueryDSL NoSQL注入",
+      "severity": "High",
+      "file_exts": ["java"],
+      "patterns": [
+        "Query\\.where.*\\+.*request",
+        "Criteria.*where.*\\+.*request",
+        "DBQuery\\.query.*\\+.*request",
+        "QueryBuilder.*where.*\\+.*request"
+      ],
+      "must_substrings": ["query", "where", "request"],
+      "exclude_substrings": ["PreparedStatement", "Parameterized"]
+    },
+    {
+      "name": "REDIS_COMMAND_INJECTION",
+      "vul_type": "COMMAND_INJECTION",
+      "desc": "Redis命令注入",
+      "severity": "High",
+      "file_exts": ["java"],
+      "patterns": [
+        "Jedis\\.eval.*\\+.*request",
+        "Jedis\\.sendCommand.*\\+.*request",
+        "RedisTemplate\\.execute.*\\+.*request",
+        "Lettuce.*execute.*\\+.*request"
+      ],
+      "must_substrings": ["eval", "execute", "request"],
+      "exclude_substrings": ["parameterized", "safe"]
+    },
+    {
+      "name": "SPRING_DATA_JPA_INJECTION",
+      "vul_type": "SQLI",
+      "desc": "Spring Data JPA SQL注入",
+      "severity": "High",
+      "file_exts": ["java"],
+      "patterns": [
+        "@Query.*value.*\\+.*request",
+        "@Query.*\\$\\.*request",
+        "Query.*setParameter.*\\+.*request",
+        "EntityManager\\.createQuery.*\\+.*request"
+      ],
+      "must_substrings": ["@Query", "createQuery", "request"],
+      "exclude_substrings": ["?1", "?2", ":param", "setParameter"]
+    },
+    {
+      "name": "APACHE_SHiro_REMEMBERME",
+      "vul_type": "AUTH_BYPASS",
+      "desc": "Apache Shiro RememberMe配置不安全",
+      "severity": "High",
+      "file_exts": ["java", "properties", "ini"],
+      "patterns": [
+        "rememberMe\\.setCipherKey.*\"base64\"",
+        "rememberMe\\.setCipherKey.*hardcoded",
+        "CookieRememberMeManager.*setCipherKey.*empty"
+      ],
+      "must_substrings": ["rememberMe", "CipherKey"],
+      "exclude_substrings": ["random", "generate", "secure"]
+    },
+    {
+      "name": "APACHE_SHIRO_WEAK_HASH",
+      "vul_type": "CRYPTO_WEAKNESS",
+      "desc": "Apache Shiro弱哈希算法",
+      "severity": "Medium",
+      "file_exts": ["java", "properties"],
+      "patterns": [
+        "DefaultHashService.*setHashAlgorithmName.*\"MD5\"",
+        "DefaultHashService.*setHashAlgorithmName.*\"SHA1\"",
+        "HashService.*setHashAlgorithmName.*\"MD5\""
+      ],
+      "must_substrings": ["HashService", "HashAlgorithm"],
+      "exclude_substrings": ["SHA256", "SHA512", "bcrypt", "PBKDF2"]
+    },
+    {
+      "name": "SPRING_ACTUATOR_EXPOSED",
+      "vul_type": "INFO_DISCLOSURE",
+      "desc": "Spring Boot Actuator端点未授权访问",
+      "severity": "High",
+      "file_exts": ["java", "properties", "yml"],
+      "patterns": [
+        "management\\.endpoints\\.web\\.exposure\\.include.*\\*",
+        "management\\.endpoint.*enabled.*true",
+        "endpoints.*enabled.*true"
+      ],
+      "must_substrings": ["management", "endpoint", "exposure"],
+      "exclude_substrings": ["security", "auth", "role", "permit"]
+    },
+    {
+      "name": "HIBERNATE_SECOND_LEVEL_CACHE_POISON",
+      "vul_type": "CACHE_POISONING",
+      "desc": "Hibernate二级缓存投毒",
+      "severity": "Medium",
+      "file_exts": ["java", "xml"],
+      "patterns": [
+        "SessionFactory.*setCacheable.*true",
+        "@Cacheable.*true",
+        "CacheConcurrencyStrategy.*READ_WRITE.*unprotected"
+      ],
+      "must_substrings": ["Cacheable", "Cache", "Hibernate"],
+      "exclude_substrings": ["validation", "sanitize"]
+    },
+    {
+      "name": "SPRING_CLOUD_CONFIG_INJECTION",
+      "vul_type": "CONFIG_INJECTION",
+      "desc": "Spring Cloud Config注入",
+      "severity": "High",
+      "file_exts": ["java", "yml", "properties"],
+      "patterns": [
+        "@Value.*\\$\\{.*request",
+        "@ConfigurationProperties.*\\+.*request",
+        "Environment\\.getProperty.*\\+.*request"
+      ],
+      "must_substrings": ["@Value", "@ConfigurationProperties", "Environment"],
+      "exclude_substrings": ["sanitize", "validate", "whitelist"]
+    },
+    {
+      "name": "MYBATIS_DYNAMIC_SQL_INJECTION",
+      "vul_type": "SQLI",
+      "desc": "MyBatis动态SQL注入",
+      "severity": "High",
+      "file_exts": ["xml", "java"],
+      "patterns": [
+        "<if.*test.*\\+.*\\$",
+        "<foreach.*collection.*\\+.*\\$",
+        "<choose.*when.*test.*\\+.*\\$",
+        "\\$\\{.*request\\.getParameter"
+      ],
+      "must_substrings": ["<if", "<foreach", "${"],
+      "exclude_substrings": ["#{", "PreparedStatement"]
+    },
+    {
+      "name": "JACKSON_POLYMORPHIC_TYPE_INJECTION",
+      "vul_type": "DESERIALIZE",
+      "desc": "Jackson多态类型注入",
+      "severity": "Critical",
+      "file_exts": ["java"],
+      "patterns": [
+        "ObjectMapper\\.enableDefaultTyping",
+        "ObjectMapper\\.activateDefaultTyping",
+        "@JsonTypeInfo.*use.*JsonTypeInfo\\.Id\\.CLASS",
+        "@JsonTypeInfo.*use.*JsonTypeInfo\\.Id\\.MINIMAL_CLASS"
+      ],
+      "must_substrings": ["enableDefaultTyping", "activateDefaultTyping", "@JsonTypeInfo"],
+      "exclude_substrings": ["NONE", "disable", "whitelist"]
+    },
+    {
+      "name": "APACHE_COMMONS_TEXT_RCE",
+      "vul_type": "RCE",
+      "desc": "Apache Commons Text RCE (CVE-2022-42889)",
+      "severity": "Critical",
+      "file_exts": ["java"],
+      "patterns": [
+        "StringSubstitutor\\.replace.*request",
+        "StringSubstitutor\\.replaceSystemProperties.*request",
+        "StrSubstitutor\\.replace.*request"
+      ],
+      "must_substrings": ["StringSubstitutor", "StrSubstitutor", "replace"],
+      "exclude_substrings": ["disableSubstitutionInValues", "setEnableSubstitutionInVariables.*false"]
+    },
+    {
+      "name": "SPRING_EXPRESSION_LANGUAGE_INJECTION",
+      "vul_type": "EL_INJECTION",
+      "desc": "Spring Expression Language注入",
+      "severity": "High",
+      "file_exts": ["java"],
+      "patterns": [
+        "SpelExpressionParser\\.parseExpression.*request",
+        "StandardEvaluationContext.*setVariable.*request",
+        "Expression\\.getValue.*request"
+      ],
+      "must_substrings": ["SpelExpressionParser", "Expression", "request"],
+      "exclude_substrings": ["SimpleEvaluationContext", "StandardTypeLocator.*remove"]
+    },
+    {
+      "name": "THYMELEAF_EXPRESSION_INJECTION",
+      "vul_type": "TEMPLATE_INJECTION",
+      "desc": "Thymeleaf表达式注入",
+      "severity": "High",
+      "file_exts": ["html", "xhtml"],
+      "patterns": [
+        "\\$\\{.*__\\$.*}",
+        "\\*\\{.*__\\$.*}",
+        "#\\{.*T\\(.*\\)\\..*}",
+        "\\$\\{.*#.*}.*exec"
+      ],
+      "must_substrings": ["${", "#{"],
+      "exclude_substrings": ["th:text", "th:utext", "th:value"]
+    },
+    {
+      "name": "VULNERABLE_DEPENDENCY",
+      "vul_type": "DEPENDENCY_VULN",
+      "desc": "已知漏洞依赖版本",
+      "severity": "High",
+      "file_exts": ["xml", "gradle", "properties"],
+      "patterns": [
+        "fastjson.*version.*1\\.2\\.(24|25|26|27|28|29|30|31|32|33|34|35|36|37|38|39|40|41|42|43|44|45|46|47|48|49|50|51|52|53|54|55|56|57|58|59|60|61|62|63|64|65|66|67|68|69|70|71|72|73|74|75|76|77|78|79|80)",
+        "log4j.*version.*2\\.(0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15)",
+        "jackson.*version.*2\\.(9|10|11|12)",
+        "commons-collections.*version.*3\\.(0|1|2)",
+        "struts.*version.*2\\.(0|1|2|3|4|5)"
+      ],
+      "must_substrings": ["version", "fastjson", "log4j", "jackson"],
+      "exclude_substrings": ["2.15", "3.0", "2.14", "secure"]
+    },
+    {
+      "name": "INSECURE_RANDOM",
+      "vul_type": "CRYPTO_WEAKNESS",
+      "desc": "不安全的随机数生成",
+      "severity": "Medium",
+      "file_exts": ["java"],
+      "patterns": [
+        "new Random\\(\\)",
+        "Math\\.random\\(\\)",
+        "java\\.util\\.Random",
+        "new SecureRandom\\(\\).*seed"
+      ],
+      "must_substrings": ["Random", "random"],
+      "exclude_substrings": ["SecureRandom", "ThreadLocalRandom", "java.security.SecureRandom"]
+    },
+    {
+      "name": "WEAK_CRYPTO_ALGORITHM",
+      "vul_type": "CRYPTO_WEAKNESS",
+      "desc": "弱加密算法",
+      "severity": "High",
+      "file_exts": ["java"],
+      "patterns": [
+        "DES\\.getInstance",
+        "RC4\\.getInstance",
+        "MD5\\.getInstance",
+        "SHA1\\.getInstance",
+        "Cipher\\.getInstance.*\"DES\"",
+        "Cipher\\.getInstance.*\"RC4\"",
+        "MessageDigest\\.getInstance.*\"MD5\"",
+        "MessageDigest\\.getInstance.*\"SHA1\""
+      ],
+      "must_substrings": ["getInstance", "DES", "RC4", "MD5", "SHA1"],
+      "exclude_substrings": ["AES", "SHA256", "SHA512", "RSA"]
+    },
+    {
+      "name": "JWT_WEAK_SECRET",
+      "vul_type": "AUTH_WEAKNESS",
+      "desc": "JWT弱密钥或硬编码密钥",
+      "severity": "High",
+      "file_exts": ["java", "properties"],
+      "patterns": [
+        "Jwts\\.builder.*signWith.*\"secret\"",
+        "JWT.*sign.*\"secret\"",
+        "SecretKey.*secret.*\"hardcoded\"",
+        "HS256.*secret.*\"123456\""
+      ],
+      "must_substrings": ["JWT", "sign", "secret"],
+      "exclude_substrings": ["generateKey", "KeyGenerator", "RS256", "RS512"]
+    },
+    {
+      "name": "SENSITIVE_DATA_IN_EXCEPTION",
+      "vul_type": "INFO_DISCLOSURE",
+      "desc": "异常中泄露敏感信息",
+      "severity": "Medium",
+      "file_exts": ["java"],
+      "patterns": [
+        "throw new.*Exception.*password",
+        "throw new.*Exception.*token",
+        "throw new.*Exception.*secret",
+        "e\\.printStackTrace\\(\\)",
+        "e\\.getMessage\\(\\)\\.toString"
+      ],
+      "must_substrings": ["Exception", "printStackTrace", "getMessage"],
+      "exclude_substrings": ["sanitize", "filter", "mask"]
+    },
+    {
+      "name": "INSECURE_HTTP_CLIENT",
+      "vul_type": "SECURITY_MISCONFIG",
+      "desc": "不安全的HTTP客户端配置",
+      "severity": "Medium",
+      "file_exts": ["java"],
+      "patterns": [
+        "HttpClient\\.Builder.*setSSLHostnameVerifier.*null",
+        "OkHttpClient\\.Builder.*hostnameVerifier.*return.*true",
+        "RestTemplate.*setRequestFactory.*untrusted"
+      ],
+      "must_substrings": ["HttpClient", "OkHttpClient", "RestTemplate"],
+      "exclude_substrings": ["SSLContext", "TrustManager", "valid"]
+    }
+  ]
+}
+

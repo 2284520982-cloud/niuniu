@@ -1,0 +1,242 @@
+{
+  "enhanced_sanitizer_rules": [
+    {
+      "sanitizer_name": "XSS_ENCODING",
+      "sanitizers": [
+        "org.apache.commons.text.StringEscapeUtils:escapeHtml4|escapeEcmaScript|escapeJava|escapeXml|escapeJson",
+        "org.springframework.web.util.HtmlUtils:htmlEscape|htmlUnescape",
+        "org.owasp.encoder.Encode:forHtml|forJavaScript|forCssString|forUri|forXml|forXmlAttribute|forJava",
+        "org.owasp.html.PolicyFactory:sanitize",
+        "org.apache.commons.lang3.StringEscapeUtils:escapeHtml4|escapeJava|escapeEcmaScript|escapeXml|escapeJson",
+        "com.google.common.html.HtmlEscapers:asEscaper",
+        "org.apache.commons.codec.net.URLCodec:encode|decode",
+        "javax.servlet.http.HttpServletResponse:encodeURL|encodeRedirectURL",
+        "com.google.common.net.UrlEscapers:urlPathSegmentEscaper|urlFormParameterEscaper",
+        "org.springframework.web.util.UriUtils:encode|encodeQueryParam|encodePathSegment",
+        "com.fasterxml.jackson.core.JsonGenerator:writeString|writeRaw",
+        "jakarta.servlet.http.HttpServletResponse:encodeURL|encodeRedirectURL"
+      ]
+    },
+    {
+      "sanitizer_name": "SQL_PREPARED_STATEMENT",
+      "sanitizers": [
+        "java.sql.PreparedStatement:setString|setInt|setLong|setBoolean|setDate|setTimestamp|setTime|setBytes|setBlob|setClob|setArray|setObject",
+        "java.sql.CallableStatement:setString|setInt|setLong|setBoolean|setDate|setTimestamp",
+        "org.springframework.jdbc.core.JdbcTemplate:query|queryForObject|queryForList|queryForMap|update",
+        "org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate:query|queryForObject|queryForList|update",
+        "org.mybatis.spring.SqlSessionTemplate:selectOne|selectList|insert|update|delete",
+        "org.apache.ibatis.session.SqlSession:selectOne|selectList|insert|update|delete",
+        "org.hibernate.Session:createQuery|createNativeQuery",
+        "org.hibernate.query.Query:setParameter|setString|setInteger|setParameterList",
+        "javax.persistence.EntityManager:createQuery|createNamedQuery|createNativeQuery",
+        "javax.persistence.Query:setParameter|setParameterList",
+        "org.jooq.DSLContext:query|execute",
+        "com.querydsl.jpa.impl.JPAQuery:from|where|select"
+      ]
+    },
+    {
+      "sanitizer_name": "PATH_NORMALIZATION",
+      "sanitizers": [
+        "java.io.File:getCanonicalPath|getCanonicalFile|getAbsolutePath|getAbsoluteFile",
+        "java.nio.file.Path:normalize|toAbsolutePath|toRealPath|resolve",
+        "java.nio.file.Paths:get",
+        "org.apache.commons.io.FilenameUtils:normalize|getFullPath|getFullPathNoEndSeparator|separatorsToUnix|separatorsToWindows",
+        "java.net.URI:normalize|resolve|relativize",
+        "org.springframework.core.io.FileSystemResource:getFile|getPath",
+        "org.springframework.util.ResourceUtils:getFile",
+        "java.nio.file.Files:createTempFile|createTempDirectory"
+      ]
+    },
+    {
+      "sanitizer_name": "COMMAND_SANITIZATION",
+      "sanitizers": [
+        "org.apache.commons.exec.CommandLine:addArgument|addArguments",
+        "org.springframework.util.ShellUtils:escapeArg",
+        "com.google.common.base.Shell:quote",
+        "org.apache.commons.exec.DefaultExecutor:setCommandLine",
+        "java.lang.ProcessBuilder:command"
+      ]
+    },
+    {
+      "sanitizer_name": "XML_SECURE_PARSING",
+      "sanitizers": [
+        "javax.xml.XMLConstants:FEATURE_SECURE_PROCESSING",
+        "javax.xml.parsers.DocumentBuilderFactory:setFeature|setExpandEntityReferences|setIgnoringComments|setIgnoringElementContentWhitespace",
+        "javax.xml.parsers.SAXParserFactory:setFeature|setNamespaceAware|setValidating",
+        "javax.xml.transform.TransformerFactory:setFeature|setAttribute",
+        "javax.xml.stream.XMLInputFactory:setProperty|setEventAllocator",
+        "org.apache.commons.text.StringEscapeUtils:escapeXml10|escapeXml11",
+        "org.dom4j.io.SAXReader:setFeature",
+        "org.jdom2.input.SAXBuilder:setFeature"
+      ]
+    },
+    {
+      "sanitizer_name": "LDAP_ESCAPE",
+      "sanitizers": [
+        "javax.naming.ldap.Rdn:escapeValue",
+        "org.springframework.ldap.filter.Escape:escapeValue|escapeFilterValue",
+        "com.unboundid.ldap.sdk.Filter:escapeValue|escapeValueOctets",
+        "org.apache.directory.api.ldap.model.filter.Filter:escapeValue",
+        "com.unboundid.ldap.sdk.SearchRequest:withFilter"
+      ]
+    },
+    {
+      "sanitizer_name": "URL_VALIDATION",
+      "sanitizers": [
+        "java.net.URL:toURI",
+        "java.net.URI:create|resolve|relativize",
+        "org.apache.commons.validator.routines.UrlValidator:isValid",
+        "org.springframework.util.StringUtils:hasText|hasLength|trimWhitespace",
+        "org.springframework.web.util.UriComponentsBuilder:fromUriString|fromPath",
+        "java.net.InetAddress:getByName|getByAddress|getCanonicalHostName",
+        "org.apache.http.client.utils.URIBuilder:setScheme|setHost|setPort|setPath"
+      ]
+    },
+    {
+      "sanitizer_name": "JSON_SANITIZATION",
+      "sanitizers": [
+        "com.alibaba.fastjson.JSON:toJSONString|toJSONBytes",
+        "com.alibaba.fastjson2.JSON:toJSONString|toJSONBytes",
+        "com.google.gson.Gson:toJson",
+        "com.fasterxml.jackson.databind.ObjectMapper:writeValueAsString|writeValueAsBytes",
+        "org.json.JSONObject:toString|put|putOpt",
+        "org.json.JSONArray:toString|put",
+        "com.fasterxml.jackson.core.JsonGenerator:writeString|writeRawValue"
+      ]
+    },
+    {
+      "sanitizer_name": "CRYPTO_SECURE",
+      "sanitizers": [
+        "javax.crypto.Cipher:getInstance",
+        "java.security.SecureRandom:<init>|getInstance|nextBytes",
+        "java.security.KeyPairGenerator:getInstance",
+        "javax.crypto.KeyGenerator:getInstance",
+        "org.bouncycastle.crypto.CipherParameters",
+        "javax.crypto.spec.SecretKeySpec:<init>",
+        "java.security.KeyFactory:generatePrivate|generatePublic"
+      ]
+    },
+    {
+      "sanitizer_name": "SSRF_PROTECTION",
+      "sanitizers": [
+        "java.net.URL:toURI",
+        "java.net.URI:create|resolve",
+        "org.springframework.util.StringUtils:hasText|hasLength",
+        "java.net.InetAddress:getByName|getByAddress|getCanonicalHostName",
+        "org.apache.http.client.utils.URIBuilder:setScheme|setHost|setPort",
+        "org.springframework.web.client.RestTemplate:exchange|getForObject|postForObject",
+        "java.net.URLStreamHandler:openConnection"
+      ]
+    },
+    {
+      "sanitizer_name": "LOG_SANITIZATION",
+      "sanitizers": [
+        "org.apache.commons.lang3.StringUtils:replace|replaceAll|replaceEach",
+        "org.slf4j.helpers.MessageFormatter:format|arrayFormat",
+        "org.apache.logging.log4j.core.pattern.MessagePatternConverter:format",
+        "org.apache.logging.log4j.core.pattern.PatternFormatter:format",
+        "java.util.logging.Logger:log|logp|logrb",
+        "org.apache.commons.logging.Log:debug|info|warn|error",
+        "org.apache.logging.log4j.Logger:log|debug|info|warn|error"
+      ]
+    },
+    {
+      "sanitizer_name": "INPUT_VALIDATION",
+      "sanitizers": [
+        "org.apache.commons.validator.GenericValidator:matchRegexp|isEmail|isUrl|isCreditCard|isInt|isFloat|isDouble",
+        "java.util.regex.Pattern:matches|compile|asPredicate",
+        "javax.validation.Validator:validate|validateProperty",
+        "org.hibernate.validator.internal.engine.ValidatorImpl:validate|validateProperty",
+        "com.google.common.base.Preconditions:checkArgument|checkNotNull|checkState|checkElementIndex",
+        "org.springframework.validation.Validator:validate|supports",
+        "javax.validation.constraints.NotBlank|NotNull|Pattern|Size|Min|Max|Email|URL|DecimalMin|DecimalMax",
+        "jakarta.validation.Validator:validate|validateProperty",
+        "org.springframework.util.Assert:notNull|hasText|hasLength|isTrue|notEmpty",
+        "com.google.common.base.Strings:isNullOrEmpty|nullToEmpty|emptyToNull"
+      ]
+    },
+    {
+      "sanitizer_name": "XXE_PROTECTION",
+      "sanitizers": [
+        "javax.xml.XMLConstants:FEATURE_SECURE_PROCESSING",
+        "javax.xml.parsers.DocumentBuilderFactory:setFeature|setExpandEntityReferences|setXIncludeAware",
+        "javax.xml.parsers.SAXParserFactory:setFeature|setNamespaceAware",
+        "javax.xml.transform.TransformerFactory:setFeature|setAttribute",
+        "javax.xml.stream.XMLInputFactory:setProperty|setSupportDTD|setSupportExternalEntities",
+        "org.dom4j.io.SAXReader:setFeature|setIncludeExternalDTDDeclarations",
+        "org.jdom2.input.SAXBuilder:setFeature|setExpandEntities"
+      ]
+    },
+    {
+      "sanitizer_name": "REFLECTION_VALIDATION",
+      "sanitizers": [
+        "java.lang.Class:forName",
+        "java.lang.ClassLoader:loadClass",
+        "java.lang.reflect.Method:invoke",
+        "java.lang.reflect.Constructor:newInstance",
+        "java.lang.reflect.Field:get|set",
+        "org.springframework.util.ClassUtils:forName|isPresent",
+        "com.google.common.reflect.Reflection:getPackageName"
+      ]
+    },
+    {
+      "sanitizer_name": "EL_EXPRESSION_VALIDATION",
+      "sanitizers": [
+        "javax.el.ELProcessor:eval",
+        "javax.el.ExpressionFactory:createValueExpression|createMethodExpression",
+        "org.springframework.expression.spel.standard.SpelExpressionParser:parseExpression",
+        "org.springframework.expression.EvaluationContext:setVariable|setRoot",
+        "org.springframework.expression.Expression:getValue|setValue"
+      ]
+    },
+    {
+      "sanitizer_name": "DESERIALIZATION_SAFE",
+      "sanitizers": [
+        "java.io.ObjectInputStream:readObject|readUnshared",
+        "com.alibaba.fastjson.parser.ParserConfig:setAutoTypeSupport|addDeny|addAccept",
+        "com.alibaba.fastjson2.JSONReader:enableSupportAutoType",
+        "com.fasterxml.jackson.databind.ObjectMapper:enableDefaultTyping|setDefaultTyping",
+        "org.yaml.snakeyaml.Yaml:load|loadAs|loadAll",
+        "com.thoughtworks.xstream.XStream:allowTypes|denyTypes|allowTypeHierarchy"
+      ]
+    },
+    {
+      "sanitizer_name": "ZIP_SLIP_PROTECTION",
+      "sanitizers": [
+        "java.nio.file.Path:normalize|toAbsolutePath|toRealPath",
+        "java.io.File:getCanonicalPath|getCanonicalFile",
+        "org.apache.commons.io.FilenameUtils:normalize|getFullPath",
+        "java.util.zip.ZipEntry:getName",
+        "java.util.zip.ZipInputStream:getNextEntry"
+      ]
+    },
+    {
+      "sanitizer_name": "REDIRECT_VALIDATION",
+      "sanitizers": [
+        "javax.servlet.http.HttpServletResponse:sendRedirect|encodeRedirectURL",
+        "org.springframework.web.servlet.view.RedirectView:setUrl|setExposeModelAttributes",
+        "org.springframework.web.util.UriComponentsBuilder:fromUriString|fromPath",
+        "java.net.URL:toURI",
+        "org.apache.commons.validator.routines.UrlValidator:isValid"
+      ]
+    },
+    {
+      "sanitizer_name": "HTTP_HEADER_VALIDATION",
+      "sanitizers": [
+        "javax.servlet.http.HttpServletResponse:setHeader|addHeader|encodeURL",
+        "org.springframework.http.HttpHeaders:set|add|setLocation|setContentType",
+        "org.springframework.http.ResponseEntity:ok|created|badRequest",
+        "org.apache.http.HttpHeaders:CONTENT_TYPE|LOCATION"
+      ]
+    },
+    {
+      "sanitizer_name": "CSP_HEADER_VALIDATION",
+      "sanitizers": [
+        "javax.servlet.http.HttpServletResponse:setHeader|addHeader",
+        "org.springframework.security.web.header.writers.ContentSecurityPolicyHeaderWriter:writeHeaders",
+        "org.springframework.web.filter.HeaderFilter:doFilter"
+      ]
+    }
+  ]
+}
+
